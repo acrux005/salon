@@ -1,0 +1,1494 @@
+// Zamów.odart.pl — zamawianie jedzenia (pizza, sushi, bary). SQLite.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model RestaurantAccount {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  restaurantId String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Restaurant {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  name               String
+  city               String
+  description        String   // krótki opis
+  address            String?
+  phone              String?
+  email              String?
+  logoUrl            String?
+  coverUrl           String?
+  isPublished        Boolean  @default(true)
+  workingHours       String?  // JSON: 7 dni, [{ open: "09:00", close: "22:00" }], "" = zamknięte
+  orderAheadDays     Int      @default(3)   // na ile dni do przodu można zamawiać
+  slotDurationMinutes Int     @default(30)  // co ile minut slot (np. 12:00, 12:30)
+  allowDelivery      Boolean  @default(true)
+  deliveryAddress    String?  // np. "dowoz w obrębie 5 km"
+  /// Optional prefix for human-readable order numbers (e.g. "#", "ZAM-").
+  orderNumberPrefix  String   @default("")
+  /// Next sequence number for new orders (editable in panel).
+  orderNumberNext    Int      @default(1)
+  updatedAt          DateTime @updatedAt
+
+  account     RestaurantAccount?
+  categories  MenuCategory[]
+  items       MenuItem[]
+  orders      Order[]
+  @@index([city])
+  @@index([isPublished])
+}
+
+model MenuCategory {
+  id           String   @id @default(cuid())
+  restaurantId String
+  name         String   // np. "Pizza", "Napoje", "Sushi"
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  items      MenuItem[]
+  @@index([restaurantId])
+}
+
+model MenuItem {
+  id           String   @id @default(cuid())
+  restaurantId String
+  categoryId   String
+  name         String
+  description  String?  // opcjonalny opis
+  pricePlz     Int      // cena w PLN (np. 24)
+  imageUrl     String?
+  isAvailable  Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  category   MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  @@index([restaurantId])
+  @@index([categoryId])
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  restaurantId    String
+  clientId        String?
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  type            String   // "pickup" | "delivery"
+  deliveryAddress String?  // przy dostawie
+  scheduledDate   String   // YYYY-MM-DD
+  scheduledSlot   String   // HH:mm (początek slotu)
+  status          String   @default("new") // new | confirmed | preparing | ready | completed | cancelled
+  totalPlz        Int      // suma w PLN
+  discountPlz     Int?
+  note            String?  // uwagi od klienta
+  /// Czytelny numer zamówienia (np. "42", "ZAM-15"); ustawiany przy składaniu zamówienia.
+  publicNumber    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  client     Client?     @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  items      OrderItem[]
+  @@index([restaurantId])
+  @@index([clientId])
+  @@index([scheduledDate])
+  @@index([status])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  menuItemId String?  // optional so SetNull works when MenuItem is deleted
+  name       String   // nazwa w momencie zamówienia
+  pricePlz   Int
+  quantity   Int      @default(1)
+  options    String?  // JSON np. ["rozmiar: duża", "dodatki: ser"]
+  createdAt  DateTime @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+  @@index([orderId])
+}
+
+model Notification {
+  id             String    @id @default(cuid())
+  recipientType  String    // "restaurant" | "admin"
+  recipientId    String
+  type           String    // new_order | info
+  title          String
+  body           String?
+  link           String?
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([recipientType, recipientId])
+  @@index([readAt])
+}
+
+// Portal (panel gabinetu) — te tabele muszą istnieć w DB (np. ta sama baza co zabiegi.odart.pl).
+model ClinicAccount {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  clinicId     String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+}
+
+model Clinic {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  city            String
+  description    String
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  specializations String
+  matchingTags    String
+  treatmentIds    String
+  kontakt         String
+  avatarUrl       String?
+  isPublished     Boolean  @default(true)
+  cosmoStaffId    Int?
+  workingHours    String?
+  bookingPhoneOnly Boolean @default(false)
+  updatedAt       DateTime @updatedAt
+
+  account         ClinicAccount?
+  staff           Staff[]
+  subCabinets     SubCabinet[]
+  clinicBookings  ClinicBooking[]
+  clinicReviews   ClinicReview[]
+  favoriteBy      ClientFavoriteClinic[]
+}
+
+model ClinicBooking {
+  id             String    @id @default(cuid())
+  clinicId       String
+  staffId        String
+  date           String
+  time           String
+  clientName     String?
+  clientEmail    String?
+  clientPhone    String?
+  treatmentId    String?
+  treatmentName  String?
+  status         String    @default("planned")
+  confirmToken   String?   @unique
+  confirmedAt    DateTime?
+  reminderSentAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  staff  Staff  @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  @@index([clinicId])
+  @@index([staffId])
+  @@index([date])
+}
+
+model SubCabinet {
+  id        String   @id @default(cuid())
+  clinicId  String
+  name      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clinic           Clinic                 @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  staff            Staff[]
+  staffSubCabinets StaffSubCabinet[]
+  treatments       SubCabinetTreatment[]
+  @@index([clinicId])
+}
+
+model StaffSubCabinet {
+  staffId      String
+  subCabinetId String
+  staff        Staff      @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  subCabinet   SubCabinet @relation(fields: [subCabinetId], references: [id], onDelete: Cascade)
+  @@id([staffId, subCabinetId])
+  @@index([staffId])
+  @@index([subCabinetId])
+}
+
+model SubCabinetTreatment {
+  id            String   @id @default(cuid())
+  subCabinetId  String
+  treatmentId   String
+  createdAt     DateTime @default(now())
+
+  subCabinet SubCabinet @relation(fields: [subCabinetId], references: [id], onDelete: Cascade)
+  @@unique([subCabinetId, treatmentId])
+  @@index([subCabinetId])
+  @@index([treatmentId])
+}
+
+model Staff {
+  id             String   @id @default(cuid())
+  clinicId       String
+  name           String
+  cosmoStaffId   Int?
+  subCabinetId   String?
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  clinic           Clinic           @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  subCabinet       SubCabinet?      @relation(fields: [subCabinetId], references: [id], onDelete: SetNull)
+  staffSubCabinets StaffSubCabinet[]
+  treatments       StaffTreatment[]
+  clinicBookings   ClinicBooking[]
+  @@index([clinicId])
+  @@index([subCabinetId])
+}
+
+model StaffTreatment {
+  id           String   @id @default(cuid())
+  staffId      String
+  treatmentId  String
+  createdAt    DateTime @default(now())
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  @@unique([staffId, treatmentId])
+  @@index([staffId])
+  @@index([treatmentId])
+}
+
+model Client {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  phone        String?
+  emailVerifiedAt         DateTime?
+  verificationToken       String?
+  verificationTokenExpires DateTime?
+  notifyReminders         Boolean    @default(true)
+  notifyPromo             Boolean    @default(false)
+  invoiceName             String?
+  invoiceNip              String?
+  invoiceAddress          String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bookings        ClientBooking[]
+  clinicReviews   ClinicReview[]
+  favoriteClinics ClientFavoriteClinic[]
+  orders          Order[]
+}
+
+model ClinicReview {
+  id         String   @id @default(cuid())
+  clinicId   String
+  clientId   String
+  authorName String   @default("")
+  rating     Int
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  @@unique([clinicId, clientId])
+  @@index([clinicId])
+  @@index([clientId])
+}
+
+model ClientBooking {
+  id                  String   @id @default(cuid())
+  clientId            String
+  cosmoAppointmentId  Int      // ID wizyty w Cosmo
+  clinicSlug          String
+  clinicName          String?
+  date                String   // YYYY-MM-DD
+  time                String   // HH:mm
+  serviceName         String?
+  status              String   @default("planned") // planned | done | cancelled
+  createdAt           DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  @@index([clientId])
+}
+
+model ClientFavoriteClinic {
+  id        String   @id @default(cuid())
+  clientId  String
+  clinicId  String
+  createdAt DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  @@unique([clientId, clinicId])
+  @@index([clientId])
+  @@index([clinicId])
+}
+
+model MessageThread {
+  id            String   @id @default(cuid())
+  subject       String?
+  typeA         String   // clinic | admin | client
+  idA           String
+  typeB         String   // clinic | admin | client
+  idB           String
+  lastMessageAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  messages PrivateMessage[]
+
+  @@index([typeA, idA])
+  @@index([typeB, idB])
+}
+
+model PrivateMessage {
+  id         String    @id @default(cuid())
+  threadId   String
+  senderType String    // clinic | admin | client
+  senderId   String
+  body       String
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  thread MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  @@index([threadId])
+  @@index([senderType, senderId])
+}
+
+// —— Portal weterynaryjny (/wet) ——
+
+model VetClinicAccount {
+  id                       String    @id @default(cuid())
+  email                    String    @unique
+  passwordHash             String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  vetClinicId              String    @unique
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+}
+
+model VetClinic {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  name              String
+  city              String
+  address           String?
+  nip               String?
+  street            String?
+  houseNumber       String?
+  apartmentNumber   String?
+  postalCode        String?
+  vatExempt         Boolean  @default(false)
+  ownerIsVet        Boolean  @default(true)
+  phone             String?
+  email             String?
+  description       String   @default("")
+  logoUrl           String?
+  isPublished       Boolean  @default(false)
+  workingHours      String?  // JSON: 7 dni [{ open, close }]
+  noOrderDays       String?  // JSON: ["YYYY-MM-DD", ...]
+  bookingPhoneOnly  Boolean  @default(false)
+  slotDurationMinutes Int    @default(30)
+  onboardingStep    Int      @default(0)
+  onboardingDoneAt  DateTime?
+  settingsJson      String?  // pakiet, magazyn, alerty, punkt przyjęć, cennik
+  updatedAt         DateTime @updatedAt
+
+  account           VetClinicAccount?
+  vets              VetDoctor[]
+  owners            PetOwner[]
+  appointments      VetAppointment[]
+  vaccineTypes      VaccineType[]
+  reminders         VetScheduledReminder[]
+  clientMessages    VetClientMessage[]
+  messageSchedules  VetClientMessageSchedule[]
+  clientSettlements VetClientSettlement[]
+  herds             VetHerd[]
+  ownerConsentLogs  VetOwnerConsentLog[]
+  ownerAccountsActive VetOwnerAccount[] @relation("OwnerActiveClinic")
+  @@index([city])
+  @@index([isPublished])
+}
+
+model VetOwnerAccount {
+  id                       String    @id @default(cuid())
+  email                    String    @unique
+  passwordHash             String
+  name                     String
+  phone                    String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  activeVetClinicId        String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  activeClinic   VetClinic?  @relation("OwnerActiveClinic", fields: [activeVetClinicId], references: [id], onDelete: SetNull)
+  clinicProfiles PetOwner[]
+  pets           Pet[]       @relation("PetGlobalAccount")
+  documents      VetPetDocument[]
+  @@index([activeVetClinicId])
+  @@index([phone])
+}
+
+model VetDoctor {
+  id          String   @id @default(cuid())
+  vetClinicId String
+  name        String
+  phone       String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vetClinic    VetClinic        @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  appointments VetAppointment[]
+  @@index([vetClinicId])
+}
+
+model PetOwner {
+  id                String   @id @default(cuid())
+  vetClinicId       String
+  accountId         String?
+  name              String
+  phone             String
+  email             String?
+  smsConsent        Boolean  @default(true)
+  emailConsent      Boolean  @default(true)
+  pushConsent       Boolean  @default(false)
+  marketingConsent  Boolean  @default(false)
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  vetClinic   VetClinic              @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  account     VetOwnerAccount?       @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  pets        Pet[]
+  herds       VetHerd[]
+  messages    VetClientMessage[]
+  settlements VetClientSettlement[]
+  consentLogs VetOwnerConsentLog[]
+  @@unique([accountId, vetClinicId])
+  @@index([vetClinicId])
+  @@index([accountId])
+  @@index([phone])
+}
+
+model VetOwnerConsentLog {
+  id          String   @id @default(cuid())
+  vetClinicId String
+  ownerId     String
+  consentType String   // sms | marketing
+  granted     Boolean
+  source      String   @default("panel")
+  note        String?
+  createdAt   DateTime @default(now())
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  owner     PetOwner  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  @@index([vetClinicId])
+  @@index([ownerId])
+  @@index([createdAt])
+}
+
+model VetClientMessage {
+  id          String    @id @default(cuid())
+  vetClinicId String
+  ownerId     String?
+  channel     String    @default("sms")
+  subject     String?
+  body        String
+  status      String    @default("sent")
+  sentAt      DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  owner     PetOwner? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  @@index([vetClinicId])
+  @@index([ownerId])
+  @@index([sentAt])
+}
+
+model VetClientMessageSchedule {
+  id           String    @id @default(cuid())
+  vetClinicId  String
+  name         String
+  channel      String    @default("sms")
+  body         String
+  scheduleKind String    @default("cyclic")
+  intervalDays Int?
+  runAt        DateTime?
+  active       Boolean   @default(true)
+  lastRunAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  @@index([vetClinicId])
+  @@index([active])
+  @@index([runAt])
+}
+
+model VetClientSettlement {
+  id          String    @id @default(cuid())
+  vetClinicId String
+  ownerId     String
+  amountPln   Float
+  description String
+  status      String    @default("open")
+  dueAt       DateTime?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  owner     PetOwner  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  @@index([vetClinicId])
+  @@index([ownerId])
+  @@index([status])
+}
+
+model VetHerd {
+  id          String   @id @default(cuid())
+  vetClinicId String
+  ownerId     String?
+  name        String
+  species     String   @default("owca") // owca | koza | bydlo | swinia | kon | drob | inne
+  location    String?
+  headCount   Int?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  owner     PetOwner? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  pets      Pet[]
+  @@index([vetClinicId])
+  @@index([ownerId])
+}
+
+model Pet {
+  id                 String    @id @default(cuid())
+  ownerId            String
+  accountId          String?
+  herdId             String?
+  name               String
+  species            String    @default("pies") // pies | kot | inne
+  photoUrl           String?
+  breed              String?
+  sex                String?   // samiec | samica | nieznana
+  coatColor          String?   // umaszczenie
+  birthDate          String?   // YYYY-MM-DD
+  chipNumber         String?
+  chipDate           String?   // YYYY-MM-DD
+  chipManufacturer   String?
+  safeAnimalStatus   String    @default("not_synced") // not_synced | pending | synced | error
+  safeAnimalSyncedAt DateTime?
+  pedigreeNotes      String?
+  pedigreeJson       String?
+  status             String    @default("active") // active | deceased | transferred
+  notes              String?
+  preventionPlanDisabled Boolean @default(false)
+  /** Kot: indoor = niewychodzący, outdoor = wychodzący */
+  catLifestyle         String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  owner         PetOwner         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  account       VetOwnerAccount? @relation("PetGlobalAccount", fields: [accountId], references: [id], onDelete: SetNull)
+  herd          VetHerd?         @relation(fields: [herdId], references: [id], onDelete: SetNull)
+  appointments  VetAppointment[]
+  vaccinations  Vaccination[]
+  reminders     VetScheduledReminder[]
+  documents     VetPetDocument[]
+  preventionRecords PetPreventionRecord[]
+  @@index([ownerId])
+  @@index([accountId])
+  @@index([herdId])
+  @@index([status])
+  @@index([safeAnimalStatus])
+  @@index([chipNumber])
+}
+
+model VetPetDocument {
+  id            String   @id @default(cuid())
+  petId         String?
+  accountId     String?
+  vetClinicId   String?
+  documentType  String   @default("other") // passport | pedigree | medical | vaccination_card | other
+  fileName      String?
+  extractedJson String?
+  createdAt     DateTime @default(now())
+
+  pet     Pet?             @relation(fields: [petId], references: [id], onDelete: SetNull)
+  account VetOwnerAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  @@index([petId])
+  @@index([accountId])
+  @@index([vetClinicId])
+}
+
+model VetAppointment {
+  id            String    @id @default(cuid())
+  vetClinicId   String
+  vetDoctorId   String?
+  petId         String?
+  date          String    // YYYY-MM-DD
+  time          String    // HH:mm
+  ownerName     String?
+  ownerPhone    String?
+  petName       String?
+  visitType     String?   // szczepienie | kontrola | konsultacja | zabieg | odrobaczenie | pilna | terenowa
+  status        String    @default("planned") // planned | done | cancelled | no_show
+  notes         String?
+  catalogItemId String?
+  confirmToken  String?   @unique
+  confirmedAt   DateTime?
+  reminderSentAt DateTime?
+  createdAt     DateTime  @default(now())
+
+  vetClinic VetClinic   @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  vetDoctor VetDoctor?  @relation(fields: [vetDoctorId], references: [id], onDelete: SetNull)
+  pet       Pet?        @relation(fields: [petId], references: [id], onDelete: SetNull)
+  catalogItem VaccineType? @relation(fields: [catalogItemId], references: [id], onDelete: SetNull)
+  @@index([vetClinicId])
+  @@index([vetDoctorId])
+  @@index([petId])
+  @@index([catalogItemId])
+  @@index([date])
+  @@index([status])
+}
+
+model VaccineType {
+  id                  String @id @default(cuid())
+  vetClinicId         String
+  category            String @default("szczepienie") // szczepienie | zabieg | konsultacja | inne
+  name                String
+  manufacturer        String?
+  defaultPrice        Int?   // grosze (np. 15000 = 150,00 PLN)
+  defaultIntervalDays Int    @default(365)
+  defaultVisitType    String?
+  trackStock          Boolean @default(false)
+  stockDoses          Int?
+  urplId              String?
+  permitNumber        String?
+  active              Boolean @default(true)
+  order               Int    @default(0)
+
+  vetClinic     VetClinic        @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  vaccinations  Vaccination[]
+  appointments  VetAppointment[]
+  @@index([vetClinicId])
+  @@index([vetClinicId, category])
+}
+
+model Vaccination {
+  id             String   @id @default(cuid())
+  petId          String
+  vaccineTypeId  String
+  administeredAt DateTime
+  nextDueAt      DateTime
+  batchNumber    String?
+  batchExpiryDate String?
+  vetName        String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  pet         Pet         @relation(fields: [petId], references: [id], onDelete: Cascade)
+  vaccineType VaccineType @relation(fields: [vaccineTypeId], references: [id], onDelete: Cascade)
+  @@index([petId])
+  @@index([nextDueAt])
+  @@index([vaccineTypeId])
+}
+
+model PetPreventionRecord {
+  id        String   @id @default(cuid())
+  petId     String
+  itemKey   String
+  doneAt    DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  @@index([petId])
+  @@index([petId, itemKey])
+}
+
+model VetScheduledReminder {
+  id          String    @id @default(cuid())
+  vetClinicId String
+  ownerId     String?
+  petId       String?
+  kind        String    // appointment | vaccination | prevention
+  channel     String    @default("sms") // sms | email
+  itemKey     String?
+  sendAt      DateTime
+  sentAt      DateTime?
+  message     String
+  createdAt   DateTime  @default(now())
+
+  vetClinic VetClinic @relation(fields: [vetClinicId], references: [id], onDelete: Cascade)
+  pet       Pet?      @relation(fields: [petId], references: [id], onDelete: SetNull)
+  @@index([vetClinicId])
+  @@index([petId])
+  @@index([sendAt])
+  @@index([sentAt])
+  @@index([petId, kind, itemKey])
+}
+
+// —— GabinetHarmonogram — wielobranżowa platforma (/gabinet) ——
+
+model GabClinicAccount {
+  id                       String    @id @default(cuid())
+  email                    String    @unique
+  passwordHash             String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  gabClinicId              String    @unique
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+}
+
+model GabClinicMember {
+  id           String   @id @default(cuid())
+  gabClinicId  String
+  email        String
+  passwordHash String
+  name         String
+  role         String   @default("reception")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  @@unique([gabClinicId, email])
+  @@index([email])
+}
+
+model GabPushSubscription {
+  id                  String   @id @default(cuid())
+  gabClinicId         String?
+  gabClientId         String?
+  gabPatientAccountId String?
+  endpoint            String   @unique
+  keysJson            String
+  context             String   @default("gab_patient")
+  createdAt           DateTime @default(now())
+
+  gabClinic         GabClinic?         @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  gabClient         GabClient?         @relation(fields: [gabClientId], references: [id], onDelete: Cascade)
+  gabPatientAccount GabPatientAccount? @relation(fields: [gabPatientAccountId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+  @@index([gabClientId])
+  @@index([gabPatientAccountId])
+}
+
+model GabClinic {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  vertical            String   @default("dent")
+  name                String
+  city                String
+  address             String?
+  nip                 String?
+  phone               String?
+  email               String?
+  description         String   @default("")
+  logoUrl             String?
+  isPublished         Boolean  @default(false)
+  workingHours        String?
+  noOrderDays         String?
+  bookingPhoneOnly    Boolean  @default(false)
+  slotDurationMinutes Int      @default(30)
+  onboardingStep      Int      @default(0)
+  onboardingDoneAt    DateTime?
+  settingsJson        String?
+  updatedAt           DateTime @updatedAt
+
+  account            GabClinicAccount?
+  staff              GabStaff[]
+  clients            GabClient[]
+  patients           GabPatient[]
+  appointments       GabAppointment[]
+  treatmentCatalog   GabTreatmentCatalogItem[]
+  treatmentPlans     GabTreatmentPlan[]
+  recallRules        GabRecallRule[]
+  reminders          GabScheduledReminder[]
+  clientMessages     GabClientMessage[]
+  messageSchedules   GabClientMessageSchedule[]
+  clientSettlements  GabClientSettlement[]
+  clientConsentLogs  GabClientConsentLog[]
+  patientAccountsActive GabPatientAccount[] @relation("GabPatientActiveClinic")
+  members            GabClinicMember[]
+  pushSubscriptions  GabPushSubscription[]
+  @@index([city])
+  @@index([isPublished])
+  @@index([vertical])
+}
+
+model GabStaff {
+  id          String   @id @default(cuid())
+  gabClinicId String
+  name        String
+  phone       String?
+  role        String   @default("doctor")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  workingHours String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  gabClinic    GabClinic        @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  appointments GabAppointment[]
+  @@index([gabClinicId])
+}
+
+model GabPatientAccount {
+  id                       String    @id @default(cuid())
+  email                    String    @unique
+  passwordHash             String
+  name                     String
+  phone                    String
+  emailVerifiedAt          DateTime?
+  verificationToken        String?
+  verificationTokenExpires DateTime?
+  activeGabClinicId        String?
+  calendarToken            String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  activeClinic GabClinic?     @relation("GabPatientActiveClinic", fields: [activeGabClinicId], references: [id], onDelete: SetNull)
+  clientProfiles GabClient[]
+  patients       GabPatient[]
+  documents      GabPatientDocument[]
+  pushSubscriptions GabPushSubscription[]
+  @@index([activeGabClinicId])
+  @@index([calendarToken])
+}
+
+model GabClient {
+  id               String   @id @default(cuid())
+  gabClinicId      String
+  accountId        String?
+  name             String
+  phone            String
+  email            String?
+  smsConsent       Boolean  @default(true)
+  emailConsent     Boolean  @default(true)
+  pushConsent      Boolean  @default(false)
+  marketingConsent Boolean  @default(false)
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  gabClinic   GabClinic              @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  account     GabPatientAccount?     @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  patients    GabPatient[]
+  appointments GabAppointment[]
+  messages    GabClientMessage[]
+  settlements GabClientSettlement[]
+  consentLogs GabClientConsentLog[]
+  pushSubscriptions GabPushSubscription[]
+  @@unique([accountId, gabClinicId])
+  @@index([gabClinicId])
+  @@index([phone])
+}
+
+model GabPatient {
+  id           String   @id @default(cuid())
+  gabClinicId  String
+  clientId     String?
+  accountId    String?
+  name         String
+  phone        String
+  email        String?
+  pesel        String?
+  birthDate    String?
+  status       String   @default("active")
+  smsConsent   Boolean  @default(true)
+  emailConsent Boolean  @default(true)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  gabClinic     GabClinic            @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  client        GabClient?           @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  account       GabPatientAccount?   @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  appointments  GabAppointment[]
+  documents     GabPatientDocument[]
+  treatmentPlans GabTreatmentPlan[]
+  @@index([gabClinicId])
+  @@index([clientId])
+  @@index([status])
+}
+
+model GabAppointment {
+  id             String    @id @default(cuid())
+  gabClinicId    String
+  gabStaffId     String?
+  patientId      String?
+  clientId       String?
+  date           String
+  time           String
+  patientName    String?
+  patientPhone   String?
+  visitType      String?
+  status         String    @default("planned")
+  notes          String?
+  reminderSentAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  gabClinic GabClinic  @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  gabStaff  GabStaff?  @relation(fields: [gabStaffId], references: [id], onDelete: SetNull)
+  patient   GabPatient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  client    GabClient? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  @@index([gabClinicId])
+  @@index([date])
+  @@index([patientId])
+}
+
+model GabPatientDocument {
+  id            String   @id @default(cuid())
+  patientId     String?
+  accountId     String?
+  gabClinicId   String?
+  documentType  String   @default("other")
+  fileName      String?
+  extractedJson String?
+  createdAt     DateTime @default(now())
+
+  patient GabPatient?        @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  account GabPatientAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  @@index([patientId])
+  @@index([gabClinicId])
+}
+
+model GabTreatmentCatalogItem {
+  id              String   @id @default(cuid())
+  gabClinicId     String
+  name            String
+  category        String   @default("general")
+  pricePln        Float    @default(0)
+  durationMinutes Int      @default(30)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+}
+
+model GabTreatmentPlan {
+  id                  String    @id @default(cuid())
+  gabClinicId         String
+  patientId           String
+  title               String
+  status              String    @default("draft")
+  totalPln            Float     @default(0)
+  notes               String?
+  presentedAt         DateTime?
+  acceptedAt          DateTime?
+  patientResponseNote String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  patient   GabPatient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  items     GabTreatmentPlanItem[]
+  @@index([gabClinicId])
+  @@index([patientId])
+}
+
+model GabTreatmentPlanItem {
+  id        String   @id @default(cuid())
+  planId    String
+  title     String
+  toothFdi  String?
+  pricePln  Float    @default(0)
+  status    String   @default("planned")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  plan GabTreatmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  @@index([planId])
+}
+
+model GabRecallRule {
+  id              String   @id @default(cuid())
+  gabClinicId     String
+  name            String
+  visitType       String
+  intervalDays    Int
+  channel         String   @default("sms")
+  messageTemplate String
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+}
+
+model GabScheduledReminder {
+  id          String    @id @default(cuid())
+  gabClinicId String
+  patientId   String?
+  clientId    String?
+  kind        String    @default("recall")
+  channel     String    @default("sms")
+  message     String
+  sendAt      DateTime
+  sentAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+  @@index([sendAt])
+}
+
+model GabClientMessage {
+  id          String   @id @default(cuid())
+  gabClinicId String
+  clientId    String?
+  channel     String   @default("sms")
+  subject     String?
+  body        String
+  status      String   @default("sent")
+  sentAt      DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  client    GabClient? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  @@index([gabClinicId])
+}
+
+model GabClientMessageSchedule {
+  id           String    @id @default(cuid())
+  gabClinicId  String
+  name         String
+  channel      String    @default("sms")
+  body         String
+  scheduleKind String    @default("cyclic")
+  intervalDays Int?
+  runAt        DateTime?
+  active       Boolean   @default(true)
+  lastRunAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+}
+
+model GabClientSettlement {
+  id          String    @id @default(cuid())
+  gabClinicId String
+  clientId    String
+  amountPln   Float
+  description String
+  status      String    @default("open")
+  dueAt       DateTime?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  client    GabClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+}
+
+model GabClientConsentLog {
+  id          String   @id @default(cuid())
+  gabClinicId String
+  clientId    String
+  consentType String
+  granted     Boolean
+  source      String   @default("panel")
+  note        String?
+  createdAt   DateTime @default(now())
+
+  gabClinic GabClinic @relation(fields: [gabClinicId], references: [id], onDelete: Cascade)
+  client    GabClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  @@index([gabClinicId])
+}
+
+// --- randka.odart.pl — portal randkowy (ścieżki app: /randki) ---
+
+model DatingAccount {
+  id                         String    @id @default(cuid())
+  email                      String    @unique
+  passwordHash               String
+  emailVerifiedAt            DateTime?
+  verificationToken          String?
+  verificationTokenExpires   DateTime?
+  passwordResetToken         String?
+  passwordResetTokenExpires  DateTime?
+  warnedAt                   DateTime?
+  bannedAt                   DateTime?
+  banReason                  String?
+  isPremium                  Boolean   @default(false)
+  premiumUntil               DateTime?
+  stripeCustomerId           String?
+  stripeSubscriptionId       String?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+
+  profile            DatingProfile?
+  dailyMoments       DatingDailyMoment[]
+  pushSubscriptions  DatingPushSubscription[]
+  voiceMatchQueue    DatingVoiceMatchQueue?
+  vibeMaterials      DatingVibeMaterial[]
+  photos        DatingPhoto[]
+  impressions   DatingDiscoveryImpression[] @relation("DatingImpressionsViewer")
+  impressedBy   DatingDiscoveryImpression[] @relation("DatingImpressionsTarget")
+  likesSent     DatingLike[]     @relation("DatingLikesSent")
+  likesReceived DatingLike[]     @relation("DatingLikesReceived")
+  messagesSent  DatingMessage[]
+  blocksSent    DatingBlock[]    @relation("DatingBlocksSent")
+  blocksReceived DatingBlock[]   @relation("DatingBlocksReceived")
+  reportsSent   DatingReport[]
+  dateProposals DatingDateProposal[]
+  presenceTraces DatingPresenceTrace[] @relation("DatingPresenceFrom")
+  presenceInRoom DatingPresenceTrace[] @relation("DatingPresenceRoom")
+}
+
+model DatingPhoto {
+  id        String   @id @default(cuid())
+  accountId String
+  url       String
+  order     Int      @default(0)
+  approved  Boolean  @default(true)
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([accountId])
+}
+
+model DatingBlock {
+  id               String   @id @default(cuid())
+  blockerAccountId String
+  blockedAccountId String
+  createdAt        DateTime @default(now())
+
+  blocker DatingAccount @relation("DatingBlocksSent", fields: [blockerAccountId], references: [id], onDelete: Cascade)
+  blocked DatingAccount @relation("DatingBlocksReceived", fields: [blockedAccountId], references: [id], onDelete: Cascade)
+  @@unique([blockerAccountId, blockedAccountId])
+  @@index([blockerAccountId])
+}
+
+model DatingReport {
+  id                String    @id @default(cuid())
+  reporterAccountId String
+  reportedAccountId String
+  reason            String
+  status            String    @default("pending")
+  reviewedAt        DateTime?
+  reviewedBy        String?
+  actionTaken       String?
+  createdAt         DateTime  @default(now())
+
+  reporter DatingAccount @relation(fields: [reporterAccountId], references: [id], onDelete: Cascade)
+  @@index([reportedAccountId])
+  @@index([status])
+}
+
+model DatingProfile {
+  id          String   @id @default(cuid())
+  accountId   String   @unique
+  displayName String
+  birthYear   Int
+  city        String
+  gender      String
+  lookingFor  String   @default("[]")
+  bio         String   @default("")
+  photoUrl    String?
+  promptsJson String   @default("[]")
+  interests       String   @default("[]")
+  searchAllCities Boolean  @default(false)
+  ageMinPref      Int      @default(18)
+  ageMaxPref      Int      @default(99)
+  active          Boolean  @default(true)
+  completed   Boolean  @default(false)
+  onboardingJson    String   @default("{}")
+  onboardingDone    Boolean  @default(false)
+  intention         String   @default("relationship")
+  mood              String?
+  moodUpdatedAt     DateTime?
+  todayState        String?
+  todayStateUpdatedAt DateTime?
+  communicationStyle String?
+  avgResponseHours  Float?
+  responseRate      Float?
+  ghostScore        Int      @default(100)
+  profileQualityScore Int    @default(100)
+  voiceIntroUrl       String?
+  activityIntent      String?
+  revealMode          String   @default("vibe_first")
+  circleSlug          String?
+  auraImageUrl        String?
+  auraImageUrl2       String?
+  auraImageUrl3       String?
+  auraCaption         String   @default("")
+  auraPrompt          String   @default("")
+  auraStatus          String   @default("none")
+  roomPhasesJson      String   @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([circleSlug])
+  @@index([city])
+  @@index([active, completed])
+}
+
+model DatingLike {
+  id            String   @id @default(cuid())
+  fromAccountId String
+  toAccountId   String
+  liked         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  fromAccount DatingAccount @relation("DatingLikesSent", fields: [fromAccountId], references: [id], onDelete: Cascade)
+  toAccount   DatingAccount @relation("DatingLikesReceived", fields: [toAccountId], references: [id], onDelete: Cascade)
+  @@unique([fromAccountId, toAccountId])
+  @@index([fromAccountId])
+  @@index([toAccountId])
+}
+
+model DatingMatch {
+  id                   String    @id @default(cuid())
+  accountAId           String
+  accountBId           String
+  status               String    @default("active")
+  unmatchedAt          DateTime?
+  unmatchedByAccountId String?
+  icebreakersJson      String   @default("[]")
+  compatibilityNote  String?
+  chemistryScore       Int?
+  chemistryLabel       String?
+  wingmanTipsJson      String   @default("[]")
+  privateSpaceAt       DateTime?
+  createdAt            DateTime  @default(now())
+
+  messages      DatingMessage[]
+  dateProposals DatingDateProposal[]
+  @@unique([accountAId, accountBId])
+  @@index([accountAId])
+  @@index([accountBId])
+}
+
+model DatingMessage {
+  id              String    @id @default(cuid())
+  matchId         String
+  senderAccountId String
+  body            String
+  readAt          DateTime?
+  createdAt       DateTime  @default(now())
+
+  match  DatingMatch   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  sender DatingAccount @relation(fields: [senderAccountId], references: [id], onDelete: Cascade)
+  @@index([matchId])
+  @@index([senderAccountId])
+}
+
+model DatingDateProposal {
+  id                String    @id @default(cuid())
+  matchId           String
+  proposerAccountId String
+  proposedDate      String
+  proposedTime      String
+  place             String?
+  note              String?
+  status            String    @default("pending")
+  createdAt         DateTime  @default(now())
+  respondedAt       DateTime?
+
+  match    DatingMatch   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  proposer DatingAccount @relation(fields: [proposerAccountId], references: [id], onDelete: Cascade)
+  @@index([matchId])
+  @@index([proposerAccountId])
+}
+
+model DatingDiscoveryImpression {
+  id                 String   @id @default(cuid())
+  viewerAccountId    String
+  targetAccountId    String
+  whyReason          String?
+  compatibilityScore Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  viewer DatingAccount @relation("DatingImpressionsViewer", fields: [viewerAccountId], references: [id], onDelete: Cascade)
+  target DatingAccount @relation("DatingImpressionsTarget", fields: [targetAccountId], references: [id], onDelete: Cascade)
+  @@index([viewerAccountId, createdAt])
+  @@index([targetAccountId])
+}
+
+model DatingDailyMoment {
+  id           String   @id @default(cuid())
+  accountId    String
+  url          String
+  secondaryUrl String?
+  audioUrl     String?
+  momentType   String   @default("photo")
+  caption      String   @default("")
+  capturedAt   DateTime @default(now())
+  faceVerified Boolean  @default(false)
+  faceScore    Float?
+  createdAt    DateTime @default(now())
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  presenceTraces DatingPresenceTrace[]
+  @@index([accountId, createdAt])
+}
+
+model DatingPresenceTrace {
+  id             String   @id @default(cuid())
+  roomAccountId  String
+  fromAccountId  String?
+  guestAlias     String?
+  reactionId     String
+  traceLabel     String
+  targetType     String   @default("room")
+  momentId       String?
+  replyToTraceId String?
+  createdAt      DateTime @default(now())
+
+  roomHost DatingAccount         @relation("DatingPresenceRoom", fields: [roomAccountId], references: [id], onDelete: Cascade)
+  from     DatingAccount?        @relation("DatingPresenceFrom", fields: [fromAccountId], references: [id], onDelete: SetNull)
+  moment   DatingDailyMoment?    @relation(fields: [momentId], references: [id], onDelete: SetNull)
+  replyTo  DatingPresenceTrace?  @relation("TraceReply", fields: [replyToTraceId], references: [id], onDelete: SetNull)
+  replies  DatingPresenceTrace[] @relation("TraceReply")
+  @@index([roomAccountId, createdAt])
+  @@index([fromAccountId])
+  @@index([momentId])
+  @@index([replyToTraceId])
+}
+
+model DatingListeningSession {
+  id        String   @id @default(cuid())
+  scopeKey  String   @unique
+  trackKey  String
+  title     String
+  platform  String
+  embedUrl  String?
+  startedAt DateTime
+  loopSec   Int      @default(48)
+  updatedAt DateTime @updatedAt
+  @@index([scopeKey])
+}
+
+model DatingPushSubscription {
+  id        String   @id @default(cuid())
+  accountId String
+  endpoint  String   @unique
+  keysJson  String
+  createdAt DateTime @default(now())
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([accountId])
+}
+
+model DatingVoiceMatchQueue {
+  id              String   @id @default(cuid())
+  accountId       String   @unique
+  status          String   @default("waiting")
+  pairedAccountId String?
+  callId          String?
+  createdAt       DateTime @default(now())
+  expiresAt       DateTime
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([status, createdAt])
+}
+
+model DatingVoiceCallSignal {
+  id          String   @id @default(cuid())
+  callId      String   @unique
+  accountAId  String
+  accountBId  String
+  offerSdp    String?
+  answerSdp   String?
+  signalsJson String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiresAt   DateTime
+
+  @@index([accountAId])
+  @@index([accountBId])
+}
+
+model DatingVibeMaterial {
+  id           String   @id @default(cuid())
+  accountId    String
+  url          String?
+  title        String   @default("")
+  platform     String   @default("link")
+  embedUrl     String?
+  thumbnailUrl String?
+  caption      String   @default("")
+  slotType     String   @default("define")
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  account DatingAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  @@index([accountId, sortOrder])
+  @@index([accountId, slotType])
+}
+
+model DatingVibeCatalog {
+  id           String   @id @default(cuid())
+  mood         String
+  platform     String
+  externalId   String
+  url          String
+  title        String
+  embedUrl     String?
+  thumbnailUrl String?
+  artistName   String?
+  sortOrder    Int      @default(0)
+  active       Boolean  @default(true)
+  source       String   @default("auto")
+  fetchedAt    DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([platform, externalId])
+  @@index([mood, platform, active])
+}

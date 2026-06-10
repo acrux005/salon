@@ -1,0 +1,202 @@
+/* Portal weterynaryjny — osobna kolorystyka (teal + navy), bez różu salonu */
+
+.wet-portal {
+  --wet-font: var(--font-wet), "DM Sans", system-ui, sans-serif;
+  --wet-bg: #f0fdfa;
+  --wet-surface: #ffffff;
+  --wet-text: #0f172a;
+  --wet-muted: #475569;
+  --wet-accent: #0d9488;
+  --wet-accent-hover: #0f766e;
+  --wet-border: #99f6e4;
+}
+
+.wet-portal {
+  font-family: var(--wet-font);
+  color: var(--wet-text);
+}
+
+.wet-portal .wet-btn-primary {
+  @apply inline-flex items-center justify-center rounded-lg bg-wet-teal px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-wet-teal-700;
+}
+
+.wet-portal .wet-btn-outline {
+  @apply inline-flex items-center justify-center rounded-lg border-2 border-wet-teal-200 bg-white px-5 py-2.5 text-[15px] font-semibold text-wet-teal-800 transition-colors hover:bg-wet-teal-50;
+}
+
+.wet-portal .wet-card {
+  @apply rounded-2xl border border-wet-teal-200 bg-white p-6 shadow-sm;
+}
+
+.wet-portal .wet-input {
+  @apply mt-1.5 w-full rounded-2xl border border-slate-200/90 bg-white px-4 py-3.5 text-[15px] shadow-[0_1px_2px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] placeholder:text-slate-400 hover:border-slate-300 hover:shadow-[0_2px_6px_rgba(15,23,42,0.06)] focus:border-wet-teal focus:outline-none focus:shadow-[0_0_0_3px_rgba(13,148,136,0.18),0_1px_2px_rgba(15,23,42,0.06)] disabled:bg-slate-50 disabled:opacity-70;
+}
+
+.wet-portal .wet-select {
+  @apply mt-1.5 w-full cursor-pointer appearance-none rounded-2xl border border-slate-200/90 bg-white bg-no-repeat px-4 py-3.5 pr-11 text-[15px] shadow-[0_1px_2px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow] hover:border-slate-300 hover:shadow-[0_2px_6px_rgba(15,23,42,0.06)] focus:border-wet-teal focus:outline-none focus:shadow-[0_0_0_3px_rgba(13,148,136,0.18),0_1px_2px_rgba(15,23,42,0.06)] disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-70;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+}
+
+.wet-portal .wet-register-hero,
+.wet-portal .wet-auth-hero {
+  background: linear-gradient(165deg, #f0fdfa 0%, #ecfeff 42%, #f8fafc 100%);
+}
+
+.wet-portal .wet-header-sticky {
+  @apply sticky top-0 z-50 border-b border-wet-teal-200/80 bg-white/90 shadow-sm backdrop-blur-md;
+}
+
+/* Kreator — tło z glow + delikatna faktura */
+.wet-portal .wet-onboarding-shell {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(165deg, #ecfdf5 0%, #f0fdfa 28%, #ffffff 55%, #f8fafc 100%);
+}
+
+.wet-portal .wet-onboarding-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(13, 148, 136, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(45, 212, 191, 0.12), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(13, 148, 136, 0.08), transparent 45%);
+  pointer-events: none;
+}
+
+.wet-portal .wet-onboarding-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  pointer-events: none;
+}
+
+.wet-portal .wet-field-hint {
+  @apply mt-1.5 text-[12px] leading-snug text-slate-500;
+}
+
+.wet-portal .wet-field-error {
+  @apply mt-1.5 text-[12px] font-medium leading-snug text-red-600;
+}
+
+.wet-portal .wet-required-legend {
+  @apply text-[12px] text-slate-500;
+}
+
+.wet-portal .wet-required-mark {
+  @apply ml-0.5 font-semibold text-red-500;
+}
+
+.wet-portal .wet-input--error {
+  @apply border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-red-200/60;
+}
+
+.wet-portal .wet-day-chips--error {
+  @apply rounded-xl border border-red-200 bg-red-50/30 p-2;
+}
+
+.wet-portal .wet-onboarding-header {
+  @apply border-b border-white/70 bg-white/85 px-4 py-2.5 backdrop-blur-md sm:px-6;
+}
+
+.wet-portal .wet-onboarding-card {
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, rgba(13, 148, 136, 0.28), rgba(148, 163, 184, 0.22)) border-box;
+  box-shadow:
+    0 4px 6px -1px rgba(15, 23, 42, 0.05),
+    0 12px 32px -8px rgba(15, 23, 42, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+}
+
+.wet-portal .wet-onboarding-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  border-top: 1px solid rgb(226 232 240 / 0.9);
+  background-color: rgb(255 255 255 / 0.97);
+  padding: 0.875rem 1rem;
+  padding-bottom: max(0.875rem, env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -12px 40px rgb(15 23 42 / 0.14);
+  backdrop-filter: blur(16px);
+}
+
+@media (min-width: 640px) {
+  .wet-portal .wet-onboarding-cta {
+    position: static;
+    z-index: auto;
+    border-top: none;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .wet-portal .wet-onboarding-cta .wet-btn-primary-lg {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.wet-portal .wet-btn-primary-lg {
+  @apply inline-flex min-h-[3.25rem] w-full items-center justify-center rounded-2xl bg-wet-teal px-6 text-[17px] font-semibold text-white shadow-[0_4px_14px_rgba(13,148,136,0.45)] transition hover:bg-wet-teal-700 hover:shadow-[0_6px_20px_rgba(13,148,136,0.5)] active:scale-[0.99] disabled:opacity-60 disabled:shadow-none sm:min-w-[13rem] sm:w-auto;
+}
+
+@keyframes wet-home-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes wet-home-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wet-portal .wet-home-float {
+  animation: wet-home-float 6s ease-in-out infinite;
+}
+
+.wet-portal .wet-home-float-slow {
+  animation: wet-home-float 8s ease-in-out infinite;
+}
+
+.wet-portal .wet-home-float-delay {
+  animation: wet-home-float 7s ease-in-out 1.5s infinite;
+}
+
+.wet-portal .wet-home-fade-up {
+  animation: wet-home-fade-up 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wet-portal .wet-home-float,
+  .wet-portal .wet-home-float-slow,
+  .wet-portal .wet-home-float-delay,
+  .wet-portal .wet-home-fade-up {
+    animation: none;
+  }
+}

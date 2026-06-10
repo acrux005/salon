@@ -1,0 +1,69 @@
+:root {
+  --gab-sky: #0ea5e9;
+  --gab-navy: #0c4a6e;
+}
+
+.gab-portal {
+  --color-gab-sky: var(--gab-sky);
+  --color-gab-navy: var(--gab-navy);
+}
+
+.text-gab-navy {
+  color: var(--gab-navy);
+}
+
+.text-gab-sky {
+  color: var(--gab-sky);
+}
+
+.bg-gab-sky {
+  background-color: var(--gab-sky);
+}
+
+.bg-gab-navy {
+  background-color: var(--gab-navy);
+}
+
+.from-gab-sky {
+  --tw-gradient-from: var(--gab-sky);
+}
+
+.to-gab-sky {
+  --tw-gradient-to: var(--gab-sky);
+}
+
+.shadow-gab-sky\/25 {
+  --tw-shadow-color: color-mix(in srgb, var(--gab-sky) 25%, transparent);
+}
+
+.shadow-gab-sky\/30 {
+  --tw-shadow-color: color-mix(in srgb, var(--gab-sky) 30%, transparent);
+}
+
+.ring-gab-sky\/15 {
+  --tw-ring-color: color-mix(in srgb, var(--gab-sky) 15%, transparent);
+}
+
+.border-gab-sky\/20 {
+  border-color: color-mix(in srgb, var(--gab-sky) 20%, transparent);
+}
+
+.border-gab-sky\/30 {
+  border-color: color-mix(in srgb, var(--gab-sky) 30%, transparent);
+}
+
+.bg-gab-sky\/10 {
+  background-color: color-mix(in srgb, var(--gab-sky) 10%, transparent);
+}
+
+.gab-input {
+  @apply mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-[14px] text-gab-navy shadow-sm focus:border-gab-sky focus:outline-none focus:ring-2 focus:ring-gab-sky/20;
+}
+
+.gab-btn-primary {
+  @apply inline-flex items-center justify-center rounded-lg bg-gab-sky px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-sky-600;
+}
+
+.gab-header-sticky {
+  @apply sticky top-0 z-30;
+}

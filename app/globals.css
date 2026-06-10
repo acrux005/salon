@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :root {
+    --odart-accent: #d95b3a;
+    --zamow-orange: #ea580c;
+    --zamow-charcoal: #1c1917;
+    --zamow-cream: #fffbeb;
+  }
+}
+
+/**
+ * „Wężyk” w hero ODART — pionowa linia + świetlna smuga (gradient) od góry do dołu.
+ * Odtworzenie efektu z wcześniejszego demo; przy reduced motion — statyczny blask.
+ */
+@layer components {
+  .odart-snake-track {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.07) 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      rgba(255, 255, 255, 0.07) 100%
+    );
+  }
+
+  .odart-snake-glow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 32%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(217, 91, 58, 0.12) 18%,
+      rgba(249, 115, 22, 0.85) 50%,
+      rgba(217, 91, 58, 0.12) 82%,
+      transparent 100%
+    );
+    box-shadow: 0 0 24px 2px rgba(249, 115, 22, 0.35);
+    animation: odart-snake-vertical 5s ease-in-out infinite;
+  }
+
+  @keyframes odart-snake-vertical {
+    0% {
+      transform: translateY(-140%);
+    }
+    100% {
+      transform: translateY(380%);
+    }
+  }
+
+  .odart-snake-glow--delayed {
+    animation-delay: 2.6s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odart-snake-glow {
+      animation: none;
+      transform: translateY(40%);
+      opacity: 0.45;
+      box-shadow: none;
+    }
+    .odart-snake-glow--delayed {
+      transform: translateY(55%);
+    }
+  }
+
+  /* Spirala SVG (środek) — jak demo ODART */
+  @keyframes odart-spiral-opacity {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes odart-spiral-dash {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -80;
+    }
+  }
+
+  .odart-spiral-line {
+    overflow: hidden;
+  }
+
+  .odart-spiral-path {
+    stroke-dasharray: 20 10;
+    animation: odart-spiral-opacity 4s ease-in-out infinite, odart-spiral-dash 8s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odart-spiral-path {
+      animation: none;
+      opacity: 0.55;
+    }
+  }
+
+  /** Profil Rafał — lewa kolumna: bez „nachalnego” paska systemowego; cienka linia osobno w layoutcie. */
+  .rafal-profile-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .rafal-profile-scroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /** Demo Arino — tło hero „przyklejone” do viewportu przy scrollu (fixed background). */
+  .arino-hero-bg {
+    background-attachment: scroll;
+  }
+
+  @media (min-width: 1024px) {
+    .arino-hero-bg {
+      background-attachment: fixed;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arino-hero-bg {
+      background-attachment: scroll;
+    }
+  }
+}

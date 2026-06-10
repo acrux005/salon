@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "PetOwner" ADD COLUMN "emailConsent" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "PetOwner" ADD COLUMN "pushConsent" BOOLEAN NOT NULL DEFAULT false;
