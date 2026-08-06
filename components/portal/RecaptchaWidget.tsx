@@ -13,9 +13,16 @@ declare global {
   }
 }
 
-const RECAPTCHA_ACTION = "register";
+const DEFAULT_ACTION = "register";
 
-export function RecaptchaWidget({ onToken }: { onToken: (token: string) => void; id?: string }) {
+export function RecaptchaWidget({
+  onToken,
+  action = DEFAULT_ACTION,
+}: {
+  onToken: (token: string) => void;
+  id?: string;
+  action?: string;
+}) {
   const mounted = useRef(true);
 
   useEffect(() => {
@@ -25,7 +32,7 @@ export function RecaptchaWidget({ onToken }: { onToken: (token: string) => void;
       window.grecaptcha.ready(() => {
         if (!mounted.current || !window.grecaptcha) return;
         window.grecaptcha
-          .execute(SITE_KEY, { action: RECAPTCHA_ACTION })
+          .execute(SITE_KEY, { action })
           .then((token) => {
             if (mounted.current) onToken(token);
           })
@@ -40,7 +47,7 @@ export function RecaptchaWidget({ onToken }: { onToken: (token: string) => void;
       window.grecaptcha?.ready(() => {
         if (!mounted.current || !window.grecaptcha) return;
         window.grecaptcha
-          .execute(SITE_KEY, { action: RECAPTCHA_ACTION })
+          .execute(SITE_KEY, { action })
           .then((token) => {
             if (mounted.current) onToken(token);
           })
@@ -51,20 +58,20 @@ export function RecaptchaWidget({ onToken }: { onToken: (token: string) => void;
     return () => {
       mounted.current = false;
     };
-  }, [onToken]);
+  }, [onToken, action]);
 
   if (!SITE_KEY) return null;
   return null;
 }
 
 /** Returns a fresh reCAPTCHA v3 token (for use on form submit). */
-export function getRecaptchaTokenAsync(): Promise<string> {
+export function getRecaptchaTokenAsync(action = DEFAULT_ACTION): Promise<string> {
   if (typeof window === "undefined" || !SITE_KEY) return Promise.resolve("");
   const g = window.grecaptcha;
   if (!g) return Promise.resolve("");
   return new Promise((resolve, reject) => {
     g.ready(() => {
-      g.execute(SITE_KEY!, { action: RECAPTCHA_ACTION }).then(resolve).catch(reject);
+      g.execute(SITE_KEY!, { action }).then(resolve).catch(reject);
     });
   });
 }

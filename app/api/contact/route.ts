@@ -1,4 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  checkContactRateLimit,
+  getClientIp,
+  isHoneypotTriggered,
+  isTooFastSubmit,
+  looksLikeSpam,
+} from "@/lib/contactAntiSpam";
+import { verifyRecaptchaV3 } from "@/lib/recaptcha";
 import { getMailFrom, getOdartSmtpTransport } from "@/lib/odartSmtp";
 
 const CONTACT_TO = "biuro@odart.pl";
@@ -15,13 +23,32 @@ export async function POST(req: NextRequest) {
     phone?: string;
     projectType?: string;
     source?: "salon" | "odart";
-    /** np. "/strony-internetowe/" — w temacie i stopce maila */
     context?: string;
-    /** Opcjonalnie: temat z formularza (np. Opieka IT) */
     subject?: string;
-    /** Preferencja: telefon | email */
     contactPreference?: string;
+    company_website?: string;
+    _formLoadedAt?: number;
+    captchaToken?: string;
   };
+
+  if (isHoneypotTriggered(body.company_website)) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const ip = getClientIp(req);
+
+  const captcha = await verifyRecaptchaV3(body.captchaToken, "contact");
+  if (!captcha.ok) {
+    console.warn("[contact] reCAPTCHA rejected:", captcha.reason, "ip:", ip);
+    return NextResponse.json(
+      { error: "Weryfikacja antyspamowa nie powiodła się. Odśwież stronę i spróbuj ponownie." },
+      { status: 403 }
+    );
+  }
+
+  if (isTooFastSubmit(body._formLoadedAt)) {
+    return NextResponse.json({ ok: true });
+  }
 
   const name = body.name?.trim();
   const email = body.email?.trim();
@@ -38,6 +65,23 @@ export async function POST(req: NextRequest) {
       { error: "Wypełnij wymagane pola: imię, e-mail i wiadomość." },
       { status: 400 }
     );
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Podaj poprawny adres e-mail." }, { status: 400 });
+  }
+
+  if (!checkContactRateLimit(ip, email)) {
+    return NextResponse.json(
+      { error: "Zbyt wiele wiadomości w krótkim czasie. Spróbuj za chwilę lub napisz na biuro@odart.pl." },
+      { status: 429 }
+    );
+  }
+
+  const spamReason = looksLikeSpam({ name, email, message, phone });
+  if (spamReason) {
+    console.warn("[contact] spam filtered:", spamReason, "ip:", ip, "email:", email);
+    return NextResponse.json({ ok: true });
   }
 
   const siteLabel = source === "odart" ? "odart.pl" : "salon.odart.pl";

@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ODART_SITE_URL } from "@/lib/odartSite";
+import { submitContactForm } from "@/lib/contactFormClient";
 
 const SITE = ODART_SITE_URL;
 
@@ -19,6 +20,7 @@ type Props = {
 export function OdartOpiekaKontaktBlock({ contextPath, contactAvatarSrc }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const formLoadedAt = useRef(Date.now());
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,6 +34,7 @@ export function OdartOpiekaKontaktBlock({ contextPath, contactAvatarSrc }: Props
     const contactPreference = (fd.get("contact_preference") as string)?.trim();
     const consentRegulamin = fd.get("consent_regulamin") === "on";
     const consentPrzetwarzanie = fd.get("consent_przetwarzanie") === "on";
+    const honeypot = (fd.get("company_website") as string)?.trim();
 
     if (!name || !email || !message || !subject) {
       setErrorMsg("Wypełnij wymagane pola: imię, e-mail, temat i opis.");
@@ -49,33 +52,27 @@ export function OdartOpiekaKontaktBlock({ contextPath, contactAvatarSrc }: Props
     const prefLabel =
       contactPreference === "telefon" ? "telefon" : contactPreference === "email" ? "e-mail" : contactPreference;
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-          phone: phone || undefined,
-          projectType: "opieka-it",
-          source: "odart",
-          context: contextPath,
-          subject,
-          contactPreference: prefLabel,
-        }),
-      });
-      const data = (await res.json()) as { ok?: boolean; error?: string };
-      if (data.ok) {
-        setStatus("ok");
-        form.reset();
-      } else {
-        setStatus("error");
-        setErrorMsg(data.error ?? "Wystąpił błąd. Spróbuj ponownie.");
-      }
-    } catch {
+    const result = await submitContactForm(
+      {
+        name,
+        email,
+        message,
+        phone: phone || undefined,
+        projectType: "opieka-it",
+        source: "odart",
+        context: contextPath,
+        subject,
+        contactPreference: prefLabel,
+      },
+      { honeypot, formLoadedAt: formLoadedAt.current }
+    );
+    if (result.ok) {
+      setStatus("ok");
+      form.reset();
+      formLoadedAt.current = Date.now();
+    } else {
       setStatus("error");
-      setErrorMsg("Wystąpił błąd połączenia. Spróbuj ponownie.");
+      setErrorMsg(result.error ?? "Wystąpił błąd. Spróbuj ponownie.");
     }
   }
 
@@ -84,6 +81,10 @@ export function OdartOpiekaKontaktBlock({ contextPath, contactAvatarSrc }: Props
       {/* Lewa kolumna — formularz (jak demo) */}
       <div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+            <label htmlFor="opieka-k-hp">Strona www firmy</label>
+            <input id="opieka-k-hp" name="company_website" type="text" tabIndex={-1} autoComplete="off" />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="opieka-k-name" className="block text-sm font-medium text-neutral-300">

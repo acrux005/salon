@@ -15,6 +15,14 @@ export type PortfolioTimelineEntry = {
  */
 export const ODART_PORTFOLIO_TIMELINE: PortfolioTimelineEntry[] = [
   {
+    id: "tablica",
+    label: "Produkt",
+    title: "Tablica — ogłoszenia w całej Polsce",
+    description:
+      "Marketplace ogłoszeń (rzeczy, usługi, praca): chat, escrow PayU, dostawy InPost/Orlen, porównywarka, AI i i18n PL/EN.",
+    href: "https://odart.pl/project/tablica/",
+  },
+  {
     id: "salon",
     label: "Produkt",
     title: "Portal salonu beauty — rezerwacje",
@@ -41,7 +49,7 @@ export const ODART_PORTFOLIO_TIMELINE: PortfolioTimelineEntry[] = [
     label: "Produkt",
     title: "Harmonogram — warsztat / zlecenia",
     description:
-      "Zlecenia, pojazdy, klienci, opony (harmonogram.odart.pl/demo) oraz profil firmowy / produkcja (harmonogram.odart.pl/demo/produkcja).",
+      "Zlecenia, pojazdy, klienci, opony (harmonogram.odart.pl/demo) oraz profil firmowy / produkcja (/demo/produkcja).",
     href: "https://harmonogram.odart.pl/demo",
   },
   {

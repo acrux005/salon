@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ODART_SITE_URL } from "@/lib/odartSite";
+import { submitContactForm } from "@/lib/contactFormClient";
 
 const SITE = ODART_SITE_URL;
 
@@ -16,6 +17,7 @@ export type OdartKontaktFormProps = {
 export function OdartKontaktForm({ defaultProjectType, contextPath }: OdartKontaktFormProps = {}) {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const formLoadedAt = useRef(Date.now());
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,6 +30,7 @@ export function OdartKontaktForm({ defaultProjectType, contextPath }: OdartKonta
     const message = (fd.get("message") as string)?.trim();
     const consentRegulamin = fd.get("consent_regulamin") === "on";
     const consentPrzetwarzanie = fd.get("consent_przetwarzanie") === "on";
+    const honeypot = (fd.get("company_website") as string)?.trim();
 
     if (!name || !email || !message) {
       setErrorMsg("Wypełnij wymagane pola: imię, e-mail i wiadomość.");
@@ -42,36 +45,40 @@ export function OdartKontaktForm({ defaultProjectType, contextPath }: OdartKonta
 
     setStatus("sending");
     setErrorMsg("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-          phone: phone || undefined,
-          projectType: projectType || undefined,
-          source: "odart",
-          ...(contextPath ? { context: contextPath } : {}),
-        }),
-      });
-      const data = (await res.json()) as { ok?: boolean; error?: string };
-      if (data.ok) {
-        setStatus("ok");
-        form.reset();
-      } else {
-        setStatus("error");
-        setErrorMsg(data.error ?? "Wystąpił błąd. Spróbuj ponownie.");
-      }
-    } catch {
+    const result = await submitContactForm(
+      {
+        name,
+        email,
+        message,
+        phone: phone || undefined,
+        projectType: projectType || undefined,
+        source: "odart",
+        ...(contextPath ? { context: contextPath } : {}),
+      },
+      { honeypot, formLoadedAt: formLoadedAt.current }
+    );
+    if (result.ok) {
+      setStatus("ok");
+      form.reset();
+      formLoadedAt.current = Date.now();
+    } else {
       setStatus("error");
-      setErrorMsg("Wystąpił błąd połączenia. Spróbuj ponownie.");
+      setErrorMsg(result.error ?? "Wystąpił błąd. Spróbuj ponownie.");
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="odart-k-hp">Strona www firmy</label>
+        <input
+          id="odart-k-hp"
+          name="company_website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <div>
         <label htmlFor="odart-k-name" className="mb-1 block text-sm font-medium text-neutral-300">
           Imię *

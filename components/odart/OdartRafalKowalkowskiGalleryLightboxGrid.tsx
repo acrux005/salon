@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { rafalGalleryHasCaption, rafalGalleryItemAlt } from "@/lib/rafalKowalkowskiGallery";
 
 export type RafalGalleryLightboxItem = { src: string; cat: string; title: string };
 
@@ -87,7 +88,7 @@ export function OdartRafalKowalkowskiGalleryLightboxGrid({
                 ? "group relative w-[72vw] max-w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 text-left shadow-lg shadow-black/40 outline-none ring-odart-accent/0 transition hover:border-odart-accent/40 focus-visible:ring-2 focus-visible:ring-odart-accent sm:w-72"
                 : "group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 text-left shadow-lg shadow-black/30 outline-none ring-odart-accent/0 transition hover:border-odart-accent/40 focus-visible:ring-2 focus-visible:ring-odart-accent"
             }
-            aria-label={`Powiększ: ${g.title}`}
+            aria-label={`Powiększ: ${rafalGalleryItemAlt(g, i)}`}
           >
             <div className="relative aspect-[4/5]">
               <Image
@@ -97,11 +98,15 @@ export function OdartRafalKowalkowskiGalleryLightboxGrid({
                 className="object-cover transition duration-500 group-hover:scale-[1.03]"
                 sizes={layout === "strip" ? "(max-width: 640px) 72vw, 288px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-90" />
-              <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-odart-accent">{g.cat}</p>
-                <p className="mt-1.5 text-lg font-semibold text-white sm:text-xl">{g.title}</p>
-              </figcaption>
+              {rafalGalleryHasCaption(g) ? (
+                <>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-90" />
+                  <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-odart-accent">{g.cat}</p>
+                    <p className="mt-1.5 text-lg font-semibold text-white sm:text-xl">{g.title}</p>
+                  </figcaption>
+                </>
+              ) : null}
             </div>
           </button>
         ))}
@@ -161,7 +166,7 @@ export function OdartRafalKowalkowskiGalleryLightboxGrid({
                 <div className="relative h-[min(78vh,85vw)] w-full max-h-[78vh]">
                   <Image
                     src={current.src}
-                    alt={`${current.title} — ${current.cat}`}
+                    alt={rafalGalleryItemAlt(current, openIndex)}
                     fill
                     className="object-contain drop-shadow-2xl"
                     sizes="100vw"
@@ -172,10 +177,18 @@ export function OdartRafalKowalkowskiGalleryLightboxGrid({
             </div>
 
             <div className="pointer-events-auto mx-auto w-full max-w-6xl shrink-0 pt-4 text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-odart-accent">{current.cat}</p>
-              <p id={titleId} className="mt-1 text-lg font-semibold text-white sm:text-xl">
-                {current.title}
-              </p>
+              {rafalGalleryHasCaption(current) ? (
+                <>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-odart-accent">{current.cat}</p>
+                  <p id={titleId} className="mt-1 text-lg font-semibold text-white sm:text-xl">
+                    {current.title}
+                  </p>
+                </>
+              ) : (
+                <p id={titleId} className="sr-only">
+                  {rafalGalleryItemAlt(current, openIndex)}
+                </p>
+              )}
               <p className="mt-3 text-xs text-neutral-500 sm:hidden">← → na klawiaturze · Escape zamyka</p>
             </div>
 

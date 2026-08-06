@@ -22,6 +22,16 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/strona-gabinetu",
+        destination: "/strona-kosmetyczki",
+        permanent: true,
+      },
+      {
+        source: "/strona-gabinetu/:path*",
+        destination: "/strona-kosmetyczki/:path*",
+        permanent: true,
+      },
       // Jedna kanoniczna wersja URL bez końcowego „/” (unik duplikatów w GSC).
       {
         source: "/produkt/:slug/",

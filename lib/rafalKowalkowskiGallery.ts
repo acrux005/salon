@@ -216,7 +216,7 @@ export const RAFAL_GALLERY_SLIDESHOW_AUDIO_URL =
 
 /**
  * Wszystkie unikalne JPG/WebP z HTML strony galerii WP (kolejność jak w DOM).
- * Podpisy w {@link GALLERY_LABELS}; pozostałe: „GALERIA” + „Zdjęcie n”.
+ * Podpisy w {@link GALLERY_LABELS}; pozostałe bez podpisu na kafelku.
  * @see RAFAL_KOWALKOWSKI_GALLERY_WP_SOURCE
  */
 /** @deprecated Lista WP — tylko do mapowania podpisów; serwowane przez {@link RAFAL_GALLERY_ODART_SRC}. */
@@ -371,15 +371,24 @@ for (const [legacyUrl, label] of Object.entries(GALLERY_LABELS) as [
   LABEL_BY_BASENAME[base] = label;
 }
 
-export const RAFAL_KOWALKOWSKI_GALLERY: { src: string; cat: string; title: string }[] = (() => {
-  let n = 0;
-  return GALLERY_SRC.map((src) => {
+/** Wszystkie zdjęcia z listy; podpis tylko gdy jest w {@link GALLERY_LABELS}. */
+export const RAFAL_KOWALKOWSKI_GALLERY: { src: string; cat: string; title: string }[] = GALLERY_SRC.map(
+  (src) => {
     const base = src.split("/").pop() ?? "";
     const L = LABEL_BY_BASENAME[base];
-    if (L) return { src, cat: L.cat, title: L.title };
-    n += 1;
-    return { src, cat: "GALERIA", title: `Zdjęcie ${n}` };
-  });
-})();
+    return L ? { src, cat: L.cat, title: L.title } : { src, cat: "", title: "" };
+  },
+);
+
+export function rafalGalleryHasCaption(item: { cat: string; title: string }): boolean {
+  return Boolean(item.cat || item.title);
+}
+
+export function rafalGalleryItemAlt(item: { cat: string; title: string }, index: number): string {
+  if (item.title && item.cat) return `${item.title} — ${item.cat}`;
+  if (item.title) return item.title;
+  if (item.cat) return item.cat;
+  return `Zdjęcie ${index + 1}`;
+}
 
 export type RafalKowalkowskiGalleryItem = (typeof RAFAL_KOWALKOWSKI_GALLERY)[number];

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import type { RafalGalleryLightboxItem } from "@/components/odart/OdartRafalKowalkowskiGalleryLightboxGrid";
-import { RAFAL_GALLERY_SLIDESHOW_AUDIO_URL } from "@/lib/rafalKowalkowskiGallery";
+import { RAFAL_GALLERY_SLIDESHOW_AUDIO_URL, rafalGalleryHasCaption, rafalGalleryItemAlt } from "@/lib/rafalKowalkowskiGallery";
 
 const SLIDE_MS = 5500;
 
@@ -62,16 +62,18 @@ export function OdartRafalKowalkowskiGallerySlideshow({ items, className = "" }:
         <Image
           key={current.src}
           src={current.src}
-          alt={current.title}
+          alt={rafalGalleryItemAlt(current, index)}
           fill
           className="object-contain transition-opacity duration-500"
           sizes="(max-width: 768px) 100vw, 1152px"
           priority={index === 0}
         />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent px-4 pb-3 pt-12 sm:px-6 sm:pb-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-odart-accent">{current.cat}</p>
-          <p className="mt-1 line-clamp-2 text-sm font-medium text-white sm:text-base">{current.title}</p>
-        </div>
+        {rafalGalleryHasCaption(current) ? (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent px-4 pb-3 pt-12 sm:px-6 sm:pb-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-odart-accent">{current.cat}</p>
+            <p className="mt-1 line-clamp-2 text-sm font-medium text-white sm:text-base">{current.title}</p>
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">

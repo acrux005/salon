@@ -10,6 +10,15 @@ export type OdartPortfolioItem = {
 
 export const ODART_PORTFOLIO_ITEMS: OdartPortfolioItem[] = [
   {
+    title: "Tablica — ogłoszenia w całej Polsce",
+    host: "tablica.odart.pl",
+    href: "https://tablica.odart.pl/",
+    description:
+      "Portal ogłoszeniowy (rzeczy, usługi, praca): wyszukiwanie, chat, PayU escrow, InPost/Orlen, porównywarka, AI, i18n PL/EN.",
+    tech: ["Next.js", "PostgreSQL", "PayU", "PWA"],
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=80",
+  },
+  {
     title: "Portal salonu beauty",
     host: "salon.odart.pl",
     href: "https://salon.odart.pl/",
@@ -40,7 +49,7 @@ export const ODART_PORTFOLIO_ITEMS: OdartPortfolioItem[] = [
     host: "harmonogram.odart.pl",
     href: "https://harmonogram.odart.pl/demo",
     description:
-      "Warsztat: zlecenia, pojazdy, klienci, opony (harmonogram.odart.pl/demo). Profil firmowy / produkcja: projekty i harmonogram zadań (/demo/produkcja).",
+      "Warsztat (demo): zlecenia, pojazdy, klienci, opony — harmonogram.odart.pl/demo. Profil firmowy / produkcja: /demo/produkcja.",
     tech: ["Next.js", "kalendarz", "role"],
     image: "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=900&q=80",
   },
@@ -52,15 +61,6 @@ export const ODART_PORTFOLIO_ITEMS: OdartPortfolioItem[] = [
       "Strona inwestycji: mieszkania, filtry, galeria i ścieżka kontaktu — gotowy wzorzec pod sprzedaż lokali.",
     tech: ["Next.js", "React", "animacje"],
     image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?w=900&q=80",
-  },
-  {
-    title: "Randki Odart",
-    host: "randka.odart.pl",
-    href: "https://randka.odart.pl/",
-    description:
-      "Portal randkowy z profilem, dopasowaniem wzajemnych polubień, czatem i propozycją spotkania — bez swipe'a na ślepo.",
-    tech: ["Next.js", "React", "TypeScript"],
-    image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900&q=80",
   },
   {
     title: "Fotoferia",
