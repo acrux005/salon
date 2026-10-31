@@ -23,11 +23,28 @@ export const TOP_MARKETING_CITY_SLUGS: ReadonlySet<string> = new Set(bundle.topM
 export const PORTAL_CITY_BY_SLUG = Object.fromEntries(PORTAL_SEO_CITIES.map((city) => [city.slug, city]));
 export const PORTAL_CITY_BY_NAME = Object.fromEntries(PORTAL_SEO_CITIES.map((city) => [city.name, city]));
 
-/** W stopce i skrótach — 24 największe z listy marketingowej. */
+/** W skrótach marketingowych — największe z listy SEO. */
 export const FEATURED_PORTAL_CITIES = bundle.topMarketingSlugs
   .slice(0, 24)
   .map((slug) => PORTAL_CITY_BY_SLUG[slug])
   .filter((c): c is PortalSeoCity => Boolean(c));
+
+/**
+ * Stopka: Kołobrzeg + miasta z realnymi profilami w bazie (max 6).
+ * Reszta przez link „Wszystkie miasta”.
+ */
+export const FOOTER_PORTAL_CITY_SLUGS = [
+  "kolobrzeg",
+  "wroclaw",
+  "lodz",
+  "gdansk",
+  "szczecin",
+  "bydgoszcz",
+] as const;
+
+export const FOOTER_PORTAL_CITIES = FOOTER_PORTAL_CITY_SLUGS.map(
+  (slug) => PORTAL_CITY_BY_SLUG[slug]
+).filter((c): c is PortalSeoCity => Boolean(c));
 
 export const PORTAL_CITIES_TOTAL = bundle.total;
 

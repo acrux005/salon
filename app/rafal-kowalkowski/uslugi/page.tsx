@@ -11,15 +11,16 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!isRafalKowalkowskiContentHost(host)) return { title: "404" };
   const canonical = await canonicalForRafalSection(RAFAL_KOWALKOWSKI_USLUGI_PATH);
   return {
-    title: { absolute: "Usługi — Rafał Kowalkowski | ODART" },
-    description: "Fotografia, nagrania, teledyski, strony WWW i informatyka — katalog usług Rafała Kowalkowskiego.",
+    title: { absolute: "Usługi — gitara, wokal, fotografia | Rafał Kowalkowski" },
+    description:
+      "Lekcje gitary, zajęcia wokalne, nagranie wokalu i sesje fotograficzne w Kołobrzegu. Katalog usług Rafała Kowalkowskiego.",
     alternates: { canonical },
     openGraph: {
-      title: "Usługi Rafała Kowalkowskiego | ODART",
+      title: "Usługi — gitara, wokal, fotografia | Rafał Kowalkowski",
       url: canonical,
       locale: "pl_PL",
       type: "website",
-      siteName: "ODART",
+      siteName: "Rafał Kowalkowski",
     },
   };
 }

@@ -1,29 +1,55 @@
-import { getCityLocative } from "@/content/portalLocale";
+import { cityInPhrase, getCityLocative } from "@/content/portalLocale";
+import { splitCatalogClinicName } from "@/lib/catalog/clinicDisplayName";
 
 interface ClinicSeoContentProps {
   clinicName: string;
   city: string;
+  claimed?: boolean;
+  legalName?: string | null;
 }
 
-/**
- * Blok treści SEO na stronie gabinetu – rozbudowany tekst pod wyszukiwarki.
- */
-export function ClinicSeoContent({ clinicName, city }: ClinicSeoContentProps) {
+export function ClinicSeoContent({
+  clinicName,
+  city,
+  claimed = true,
+  legalName = null,
+}: ClinicSeoContentProps) {
+  const cityIn = cityInPhrase(city);
   const cityLoc = getCityLocative(city);
+  const { displayName } = splitCatalogClinicName(clinicName);
+  const headingName = displayName || clinicName;
+
+  if (!claimed) {
+    return (
+      <section className="border-t border-neutral-200/60 py-12">
+        <div className="prose prose-sm max-w-none font-[var(--font-sans)]">
+          <h2 className="text-[18px] font-semibold text-[#1F1A1C]">
+            {headingName} — {city}
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-[#6F5E64]">
+            Według danych CEIDG firma jest zarejestrowana {cityIn}. Poniżej znajdziesz informacje
+            dostępne w naszej bazie. Profil nie został jeszcze potwierdzony przez właściciela,
+            dlatego zakres usług i pozostałe dane mogą być niepełne lub nieaktualne.
+          </p>
+          {legalName ? (
+            <p className="mt-3 text-[14px] leading-relaxed text-[#6F5E64]">
+              <span className="font-medium text-[#1F1A1C]">Nazwa rejestrowa:</span> {legalName}
+            </p>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="border-t border-neutral-200/60 py-12">
       <div className="prose prose-sm max-w-none font-[var(--font-sans)]">
         <h2 className="text-[18px] font-semibold text-[#1F1A1C]">
-          Gabinet kosmetyczny {clinicName} – {cityLoc}
+          Gabinet kosmetyczny {headingName} – {cityLoc}
         </h2>
         <p className="mt-3 text-[15px] leading-relaxed text-[#6F5E64]">
-          {clinicName} to jeden z gabinetów kosmetycznych w {cityLoc} dostępnych przez platformę Zabiegi Odart. Na tej stronie znajdziesz ofertę zabiegów, specjalizacje, opinie klientów oraz możliwość umówienia wizyty online. Jeśli szukasz salonu kosmetycznego w {cityLoc} – sprawdź profil {clinicName} oraz inne gabinety w naszej bazie. Platforma łączy sprawdzone salony i gabinety kosmetyczne z klientami szukającymi profesjonalnej pielęgnacji twarzy, ciała, paznokci czy masaży.
-        </p>
-        <h3 className="mt-6 text-[16px] font-semibold text-[#1F1A1C]">
-          Zabiegi kosmetyczne w {cityLoc}
-        </h3>
-        <p className="mt-2 text-[15px] leading-relaxed text-[#6F5E64]">
-          W {cityLoc} działają liczne gabinety kosmetyczne oferujące zabiegi na twarz (oczyszczanie, peelingi, zabiegi anti-aging, pielęgnację skóry naczynkowej, trądzikowej czy z przebarwieniami), masaże, depilację, manicure, pedicure, przedłużanie rzęs i inne usługi. Wybierając gabinet, warto sprawdzić jego specjalizacje oraz opinie. Zabiegi Odart pomaga dopasować salon do potrzeb skóry – przejdź analizę w portalu lub przeglądaj listę gabinetów w {cityLoc}.
+          {headingName} to jeden z gabinetów kosmetycznych {cityIn} dostępnych przez platformę
+          Zabiegi Odart. Na tej stronie znajdziesz ofertę zabiegów, specjalizacje, opinie klientów
+          oraz możliwość umówienia wizyty online.
         </p>
       </div>
     </section>

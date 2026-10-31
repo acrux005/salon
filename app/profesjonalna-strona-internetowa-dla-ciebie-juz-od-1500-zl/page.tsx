@@ -20,9 +20,9 @@ const ODART_SITE = process.env.NEXT_PUBLIC_ODART_SITE_URL?.replace(/\/$/, "") ||
 const CANONICAL_URL = `${ODART_SITE}${CANONICAL_PATH}`;
 
 export const metadata: Metadata = {
-  title: "Profesjonalna strona internetowa od 1500 zł | ODART Kołobrzeg",
+  title: "Strona one page | ODART Kołobrzeg",
   description:
-    "Profesjonalna strona internetowa w formie one page — responsywna, bez ukrytych kosztów, od 1500 zł. Projekt, realizacja i wdrożenie. Ostry Dyżur Artystyczny, Kołobrzeg.",
+    "Krótka strona firmowa: oferta, kontakt, działa na telefonie. Projekt i wdrożenie. Rafał Kowalkowski, Kołobrzeg.",
   keywords: [
     "profesjonalna strona internetowa",
     "profesjonalna strona",
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: CANONICAL_URL },
   openGraph: {
-    title: "Profesjonalna strona internetowa od 1500 zł | ODART",
+    title: "Strona one page | ODART",
     description:
-      "Pełna, funkcjonalna strona one page od 1500 zł. UX, WordPress, SEO. Kołobrzeg i online.",
+      "Krótka strona firmowa: oferta, kontakt, WordPress. Kołobrzeg i online.",
     url: CANONICAL_URL,
     type: "website",
     locale: "pl_PL",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Profesjonalna strona internetowa od 1500 zł | ODART",
-    description: "Strona one page, responsywna, przejrzysta cena — ODART, Kołobrzeg.",
+    title: "Strona one page | ODART",
+    description: "Krótka strona firmowa. ODART, Kołobrzeg.",
   },
 };
 
@@ -75,9 +75,9 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${CANONICAL_URL}#webpage`,
       url: CANONICAL_URL,
-      name: "Profesjonalna strona internetowa od 1500 zł | ODART",
+      name: "Strona one page | ODART",
       description:
-        "Oferta profesjonalnej strony internetowej one page od 1500 zł — Kołobrzeg, cała Polska.",
+        "Krótka strona firmowa — Kołobrzeg, cała Polska.",
       isPartOf: { "@id": `${ODART_SITE}/#website` },
       about: { "@id": `${ODART_SITE}/#organization` },
       inLanguage: "pl-PL",
@@ -106,18 +106,17 @@ export default function ProfesjonalnaStrona1500Page() {
               <div className="max-w-2xl">
                 <p className="text-sm font-medium uppercase tracking-wide text-odart-accent">Kołobrzeg · online</p>
                 <h1 className="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                  Profesjonalna strona internetowa dla Ciebie już od 1500 zł
+                  Strona one page na start
                 </h1>
                 <p className="mt-6 text-base leading-7 text-neutral-300">
-                  Marzysz o własnej witrynie, ale obawiasz się kosztów? Ta{" "}
-                  <strong className="font-semibold text-white">profesjonalna strona</strong> w formie one page
-                  mieści się w przejrzystym pakiecie — pełna funkcjonalność, jasna cena, bez niespodzianek.
+                  Jedna strona: oferta, kontakt, zdjęcia. Działa na telefonie. Zakres ustalamy na rozmowie — bez
+                  cennika z półki.
                 </p>
               </div>
               <div className="mt-8 max-w-2xl lg:mt-10">
                 <div className="flex flex-wrap items-center gap-5">
                   <a
-                    href="mailto:biuro@odart.pl?subject=Zapytanie%20o%20stron%C4%99%201500%20z%C5%82"
+                    href="mailto:biuro@odart.pl?subject=Zapytanie%20o%20stron%C4%99%20one%20page"
                     className="rounded-lg bg-odart-accent px-6 py-3 text-base font-semibold text-white shadow-sm hover:brightness-110"
                   >
                     Napisz — wycena
@@ -162,8 +161,8 @@ export default function ProfesjonalnaStrona1500Page() {
                 },
                 {
                   icon: BadgeCheck,
-                  title: "Bez ukrytych kosztów",
-                  text: "Ustalona kwota 1500 zł za opisany zakres — bez dopłat „za każdą ikonkę”. Wiesz, za co płacisz.",
+                  title: "Jasny zakres",
+                  text: "Ustalamy, co wchodzi, zanim zacznę. Bez dopłat za każdą ikonkę po drodze.",
                 },
               ].map((item) => (
                 <div key={item.title} className="flex gap-4 rounded-xl border border-white/10 bg-white/[0.02] p-5">
@@ -273,15 +272,14 @@ export default function ProfesjonalnaStrona1500Page() {
           <div className="mx-auto max-w-3xl text-center">
             <BarChart3 className="mx-auto h-10 w-10 text-odart-accent" aria-hidden />
             <h2 className="mt-6 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Zamów swoją profesjonalną stronę internetową za 1500 zł
+              Napisz, jeśli taka strona Ci wystarczy
             </h2>
             <p className="mt-4 text-neutral-300">
-              Ostry Dyżur Artystyczny — UX, WordPress i SEO w przystępnej cenie. Jedna, spójna kwota za opisany
-              zakres; ustalenia indywidualne ustalamy mailowo lub telefonicznie.
+              WordPress, układ, publikacja. Kwotę i termin mówię po krótkiej rozmowie.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <a
-                href="mailto:biuro@odart.pl?subject=Zam%C3%B3wienie%20strony%201500%20z%C5%82"
+                href="mailto:biuro@odart.pl?subject=Zapytanie%20o%20stron%C4%99%20one%20page"
                 className="rounded-lg bg-odart-accent px-8 py-3 text-base font-semibold text-white hover:brightness-110"
               >
                 Zamów teraz

@@ -13,11 +13,14 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Administracja stron WordPress | Aktualizacje i bezpieczeństwo – ODART",
+    title: {
+      absolute: "Administracja WordPress Kołobrzeg | opieka nad stroną | ODART",
+    },
     description:
-      "Kompleksowa administracja WordPress: aktualizacje, bezpieczeństwo, kopie zapasowe, SEO, wydajność i zgodność z RODO. ODART — Kołobrzeg.",
+      "Administracja stron WordPress w Kołobrzegu: aktualizacje, bezpieczeństwo, backupy, SEO i RODO. ODART — tel. 695 432 415.",
     keywords: [
       "administracja WordPress",
+      "administracja WordPress Kołobrzeg",
       "utrzymanie strony WordPress",
       "aktualizacje WordPress",
       "bezpieczeństwo WordPress",
@@ -25,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: { canonical: CANONICAL },
     openGraph: {
-      title: "Administracja stron WordPress | ODART",
+      title: "Administracja WordPress Kołobrzeg | ODART",
       description:
         "Aktualizacje, monitoring, kopie zapasowe, SEO i zgodność prawna — pełna obsługa techniczna WordPress.",
       url: CANONICAL,

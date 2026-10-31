@@ -14,12 +14,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = hdr.get("host") ?? "";
   if (isOdartMainHost(host)) {
     return {
-      title: "ODART — Aplikacje webowe i strony internetowe | Kołobrzeg",
+      title: "Strony internetowe Kołobrzeg | Rafał Kowalkowski, ODART",
       description:
-        "Zaawansowane aplikacje webowe, strony WWW, WordPress jako CMS, SEO, UX/UI. Ostry Dyżur Artystyczny — Rafał Kowalkowski. Kołobrzeg i cała Polska.",
+        "Strony, aplikacje i opieka IT. Rafał Kowalkowski, Kołobrzeg, od 2008. biuro@odart.pl",
       keywords: [
         "aplikacje webowe",
         "strony internetowe Kołobrzeg",
+        "domeny .pl",
+        "poczta firmowa",
+        "zaamow.pl",
         "Next.js",
         "WordPress",
         "SEO",
@@ -34,9 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
         },
       },
       openGraph: {
-        title: "ODART — Aplikacje webowe i strony internetowe",
-        description:
-          "Aplikacje webowe, strony WWW, WordPress, SEO. Kontakt: biuro@odart.pl, Kołobrzeg.",
+        title: "Strony internetowe Kołobrzeg | ODART",
+        description: "Strony WWW, aplikacje i opieka IT. Rafał Kowalkowski, Kołobrzeg.",
         url: ODART_CANONICAL,
         siteName: "ODART",
         locale: "pl_PL",
@@ -45,8 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: "ODART — Aplikacje webowe i strony internetowe | Kołobrzeg",
-        description: "Aplikacje webowe, WordPress, SEO, UX/UI — Ostry Dyżur Artystyczny.",
+        title: "Strony internetowe Kołobrzeg | ODART",
+        description: "Strony WWW, aplikacje i opieka IT. Rafał Kowalkowski, Kołobrzeg.",
       },
     };
   }

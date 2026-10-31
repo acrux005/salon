@@ -49,12 +49,12 @@ function LoginForm() {
   }
 
   return (
-    <main className="mx-auto max-w-md px-4 py-12">
+    <main className="mx-auto min-w-0 max-w-md px-4 py-12">
       <GabLink href="/" className="text-[14px] font-medium text-sky-700 hover:underline">
         ← {brand.brandName}
       </GabLink>
-      <h1 className="mt-4 text-2xl font-bold text-gab-navy">Logowanie gabinetu</h1>
-      <p className="mt-1 text-[14px] text-slate-600">Konto administratora {brand.clinicLabel.toLowerCase()}</p>
+      <h1 className="mt-4 text-pretty text-2xl font-bold text-gab-navy">Logowanie gabinetu</h1>
+      <p className="mt-1 text-pretty text-[14px] text-slate-600">Konto administratora {brand.clinicLabel.toLowerCase()}</p>
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         {error && (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-[14px] text-red-700" role="alert">

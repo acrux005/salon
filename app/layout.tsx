@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import Script from "next/script";
 import { Inter } from "next/font/google";
@@ -10,6 +10,12 @@ import { getGabinetVerticalConfigForHost } from "@/lib/gabinetPlatform/verticals
 import { getWetSiteUrl, isWetPortalHost } from "@/lib/wetHost";
 import { getRandkiSiteUrl, isRandkiPortalHost } from "@/lib/randkiHost";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 const ODART_GA_ID = "G-MQGY5B7WXB";
 
@@ -155,7 +161,7 @@ export default async function RootLayout({
       : isWet
         ? "bg-wet-mint"
         : isGabinet
-          ? "bg-sky-50"
+          ? "max-w-full overflow-x-clip bg-sky-50"
           : isOdartSite
             ? "bg-black"
             : "bg-white";
@@ -166,7 +172,7 @@ export default async function RootLayout({
       : isWet
         ? "bg-wet-mint text-wet-navy antialiased"
         : isGabinet
-          ? "bg-sky-50/30 text-gab-navy antialiased"
+          ? "min-w-0 max-w-full overflow-x-clip bg-sky-50/30 text-gab-navy antialiased"
           : isOdartSite
             ? "bg-black text-neutral-200 overflow-x-hidden"
             : "bg-white text-stone-900";

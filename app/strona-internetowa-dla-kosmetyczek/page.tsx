@@ -6,7 +6,9 @@ const PATH = "/strona-internetowa-dla-kosmetyczek";
 const canonical = `${SALON_SITE_URL}${PATH}`;
 
 export const metadata: Metadata = {
-  title: "Strona internetowa dla kosmetyczek — gabinet, salon, SEO lokalne",
+  title: {
+    absolute: "Strona internetowa dla kosmetyczek od 1500 zł | ODART",
+  },
   description:
     "Strona internetowa dla kosmetyczek i salonów beauty: wizytówka, cennik zabiegów, opinie, rezerwacja. Pozycjonowanie na „gabinet kosmetyczny” + Twoje miasto. Wycena — biuro@odart.pl.",
   keywords: [
@@ -18,8 +20,8 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical },
   openGraph: {
-    title: "Strona internetowa dla kosmetyczek | Zabiegi Odart",
-    description: "Strona WWW dla kosmetyczek — projekt pod beauty, SEO i portal Zabiegi Odart.",
+    title: "Strona internetowa dla kosmetyczek | ODART",
+    description: "Strona WWW dla kosmetyczek — projekt pod beauty, SEO lokalne. Wycena od 1500 zł.",
     url: canonical,
     locale: "pl_PL",
     type: "website",

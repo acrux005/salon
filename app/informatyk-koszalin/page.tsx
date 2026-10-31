@@ -13,21 +13,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Usługi informatyczne w Koszalinie - Ostry Dyżur Artystyczny",
+    title: {
+      absolute: "Informatyk Koszalin — sieci, ERP, opieka IT | ODART",
+    },
     description:
-      "IT dla firm w Koszalinie: serwery, sieci LAN/WAN, ERP Comarch Optima i Enova, backup w chmurze, audyt. Kontakt: biuro@odart.pl.",
+      "IT dla firm z Koszalina: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
     keywords: [
       "informatyk Koszalin",
+      "usługi informatyczne Koszalin",
       "usługi IT Koszalin",
-      "serwery sieci Koszalin",
+      "opieka IT Koszalin",
       "Comarch Optima Koszalin",
-      "backup chmura",
     ],
     alternates: { canonical: CANONICAL },
     openGraph: {
-      title: "Usługi informatyczne Koszalin | ODART",
+      title: "Informatyk Koszalin — sieci, ERP, opieka IT | ODART",
       description:
-        "Profesjonalna obsługa IT dla firm i biur: infrastruktura, bezpieczeństwo, ERP i kopie zapasowe.",
+        "IT dla firm z Koszalina: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
       url: CANONICAL,
       locale: "pl_PL",
       type: "website",

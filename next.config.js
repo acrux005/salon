@@ -23,6 +23,30 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/awaria-it",
+        destination: "/pogotowie-it/",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/awaria-it/",
+        destination: "/pogotowie-it/",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/awaria-it",
+        destination: "/pogotowie-it/",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
+      },
+      {
+        source: "/awaria-it/",
+        destination: "/pogotowie-it/",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
+      },
+      {
         source: "/strona-gabinetu",
         destination: "/strona-kosmetyczki",
         permanent: true,
@@ -131,6 +155,55 @@ const nextConfig = {
         source: "/strona-dla-kosmetyczki",
         destination: "/strona-internetowa-dla-kosmetyczek",
         permanent: true,
+      },
+      // Krótkie URL z GSC / starych linków → kanoniczne landingu ODART.
+      {
+        source: "/pozycjonowanie",
+        destination: "/pozycjonowanie-seo",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/pozycjonowanie/",
+        destination: "/pozycjonowanie-seo",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/pozycjonowanie",
+        destination: "/pozycjonowanie-seo",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
+      },
+      {
+        source: "/pozycjonowanie/",
+        destination: "/pozycjonowanie-seo",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
+      },
+      {
+        source: "/administracja-wordpress",
+        destination: "/administracja-stron-internetowych-wordpress",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/administracja-wordpress/",
+        destination: "/administracja-stron-internetowych-wordpress",
+        permanent: true,
+        has: [{ type: "host", value: "odart.pl" }],
+      },
+      {
+        source: "/administracja-wordpress",
+        destination: "/administracja-stron-internetowych-wordpress",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
+      },
+      {
+        source: "/administracja-wordpress/",
+        destination: "/administracja-stron-internetowych-wordpress",
+        permanent: true,
+        has: [{ type: "host", value: "www.odart.pl" }],
       },
     ];
   },

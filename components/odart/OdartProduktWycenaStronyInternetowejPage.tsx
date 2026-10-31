@@ -168,14 +168,14 @@ export function OdartProduktWycenaStronyInternetowejPage() {
               wymaga porządnego zabezpieczenia. To też wpływa na realny koszt prac i utrzymania.
             </p>
             <p>
-              Szukasz konkretnej kwoty startowej? Zobacz ofertę{" "}
+              Szukasz krótkiej strony na start? Zobacz ofertę{" "}
               <Link
                 href={`${SITE}/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl`}
                 className="text-odart-accent hover:text-orange-300"
               >
-                strony już od 1500 zł
-              </Link>{" "}
-              — zakres ustalamy indywidualnie.
+                strony one page
+              </Link>
+              . Zakres i kwotę ustalamy po rozmowie.
             </p>
 
             <h3 className="mt-12 text-xl font-bold text-white">Cel i struktura witryny</h3>

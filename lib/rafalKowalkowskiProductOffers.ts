@@ -354,7 +354,8 @@ export const RAFAL_PRODUCT_OFFERS = {
       "Niezależnie od tego, czy jesteś wokalistą solowym, zespołem, producentem czy potrzebujesz wokalu do reklamy — skontaktuj się, aby umówić sesję nagraniową.",
     wpSource: RAFAL_KOWALKOWSKI_NAGRANIE_WOKALU_WP_SOURCE,
     odartHref: RAFAL_KOWALKOWSKI_NAGRANIE_WOKALU_ODART_HREF,
-    jsonLdDescription: "Nagranie wokalu w studiu — profesjonalna sesja, miks, mastering, Kołobrzeg.",
+    jsonLdDescription:
+      "Nagrywanie wokalu w studiu w Kołobrzegu — sesja, miks i mastering. Śpiew z podkładem, cover i nagranie piosenki. Rafał Kowalkowski.",
     related: [
       { title: "Tuning wokalu", price: "100,00 zł", href: RAFAL_KOWALKOWSKI_TUNING_WOKALU_PATH, image: IMG_TUNING },
       { title: "Nagranie piosenki z podkładem", price: "500,00 zł", href: RAFAL_KOWALKOWSKI_NAGRANIE_PODKLAD_PATH, image: IMG_TUNING },

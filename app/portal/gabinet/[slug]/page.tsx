@@ -26,6 +26,9 @@ import { Breadcrumbs } from "@/components/portal/Breadcrumbs";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { getPortalCitySlug } from "@/content/portalCities";
+import { ClinicUnverifiedNotice } from "@/components/clinic/ClinicUnverifiedNotice";
+import { isClinicClaimed } from "@/lib/catalogListingServer";
+import { splitCatalogClinicName } from "@/lib/catalog/clinicDisplayName";
 
 /** Wyłącz cache — opinie muszą być zawsze aktualne. */
 export const dynamic = "force-dynamic";
@@ -37,9 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const clinic = await getClinicBySlugAsync(slug);
   if (!clinic) return { title: "Gabinet" };
-  const title = `${clinic.name} — gabinet kosmetyczny`;
+  const { displayName } = splitCatalogClinicName(clinic.name);
+  const titleName = displayName || clinic.name;
+  const title = `${titleName} — gabinet kosmetyczny`;
   const description =
-    (clinic.description?.trim().slice(0, 160) || `Gabinet ${clinic.name} – sprawdź ofertę i umów wizytę.`) +
+    (clinic.description?.trim().slice(0, 160) || `Gabinet ${titleName} – sprawdź ofertę i umów wizytę.`) +
     (clinic.description && clinic.description.length > 160 ? "…" : "");
   const canonical = `${SITE_URL}/portal/gabinet/${slug}`;
   return {
@@ -47,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description,
     alternates: { canonical },
     openGraph: {
-      title: clinic.name,
+      title: titleName,
       description,
       url: canonical,
       type: "website",
@@ -68,6 +73,21 @@ export default async function PortalClinicPage({
   if (!record) notFound();
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
+  const claimed = record.id ? await isClinicClaimed(record.id) : false;
+  const { displayName, legalName } = splitCatalogClinicName(record.name);
+  const titleName = displayName || record.name;
+
+  let catalogUpdatedAt: Date | null = null;
+  try {
+    const row = await getPrisma().clinic.findUnique({
+      where: { id: record.id },
+      select: { updatedAt: true },
+    });
+    catalogUpdatedAt = row?.updatedAt ?? null;
+  } catch {
+    catalogUpdatedAt = null;
+  }
+
   const [data, session, reviews] = await Promise.all([
     buildClinicPageData(record),
     getServerSession(authOptions),
@@ -109,7 +129,7 @@ export default async function PortalClinicPage({
     "@graph": [
       {
         "@type": "LocalBusiness",
-        name: record.name,
+        name: titleName,
         url: `${SITE_URL}/portal/gabinet/${record.slug}`,
         address: { "@type": "PostalAddress", addressLocality: record.city },
         ...(record.kontakt?.phone && { telephone: record.kontakt.phone }),
@@ -131,7 +151,7 @@ export default async function PortalClinicPage({
           })),
         }),
       },
-      ...(data.faq.items.length > 0
+      ...(claimed && data.faq.items.length > 0
         ? [
             {
               "@type": "FAQPage" as const,
@@ -147,7 +167,7 @@ export default async function PortalClinicPage({
   };
 
   return (
-    <ClinicDataProvider data={{ ...data, sessionInfo, initialOpenBooking }}>
+    <ClinicDataProvider data={{ ...data, sessionInfo, initialOpenBooking, claimed }}>
       <ClinicContactModalProvider>
         <ClinicBookingProvider>
           <script
@@ -165,7 +185,7 @@ export default async function PortalClinicPage({
                     ...(record.city && citySlug
                       ? [{ label: record.city, href: `/portal/gabinety/${citySlug}` }]
                       : []),
-                    { label: record.name },
+                    { label: titleName },
                   ]}
                 />
                 <Link
@@ -179,12 +199,19 @@ export default async function PortalClinicPage({
               <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10 lg:pt-6">
                 <div className="min-w-0">
                   <ClinicHeroCompact />
-                  <ClinicMatching problem={problem} />
-                  <ClinicSpecializations activeProblem={problem} />
-                  <ClinicTreatmentsBooksy problem={problem} />
-                  <ClinicEffects />
-                  <ClinicAbout />
-                  <ClinicFAQ />
+                  {!claimed ? (
+                    <ClinicUnverifiedNotice slug={record.slug} updatedAt={catalogUpdatedAt} />
+                  ) : null}
+                  {claimed ? (
+                    <>
+                      <ClinicMatching problem={problem} />
+                      <ClinicSpecializations activeProblem={problem} />
+                      <ClinicTreatmentsBooksy problem={problem} />
+                      <ClinicEffects />
+                      <ClinicAbout />
+                      <ClinicFAQ />
+                    </>
+                  ) : null}
                   <ClinicFinalCTA />
                   <ClinicReviews
                     reviews={reviews}
@@ -192,7 +219,12 @@ export default async function PortalClinicPage({
                     clinicSlug={record.slug}
                     isClient={sessionInfo.isClient}
                   />
-                  <ClinicSeoContent clinicName={record.name} city={record.city} />
+                  <ClinicSeoContent
+                    clinicName={record.name}
+                    city={record.city}
+                    claimed={claimed}
+                    legalName={legalName}
+                  />
                 </div>
                 <ClinicSidebar />
               </div>

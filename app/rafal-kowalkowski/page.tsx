@@ -14,18 +14,27 @@ export async function generateMetadata(): Promise<Metadata> {
   }
   const canonical = await canonicalForRafalSection(RAFAL_KOWALKOWSKI_PROFILE_PATH);
   return {
-    title: { absolute: "Rafał Kowalkowski — fotografia, nagrania, strony | ODART" },
+    title: { absolute: "Rafał Kowalkowski — lekcje gitary, wokal i fotografia | Kołobrzeg" },
     description:
-      "ACRUX: fotografia, nagrania, teledyski, strony WWW i usługi IT — Rafał Kowalkowski, ODART Kołobrzeg. Portfolio, social, kontakt.",
+      "Nauka gry na gitarze, zajęcia wokalne i fotografia w Kołobrzegu. Lekcje indywidualne (także online), nagranie wokalu i sesje portretowe — Rafał Kowalkowski.",
+    keywords: [
+      "Rafał Kowalkowski",
+      "nauka gry na gitarze Kołobrzeg",
+      "lekcje gitary Kołobrzeg",
+      "zajęcia wokalne Kołobrzeg",
+      "nauka śpiewu Kołobrzeg",
+      "fotograf Kołobrzeg",
+      "sesja zdjęciowa Kołobrzeg",
+    ],
     alternates: { canonical },
     openGraph: {
-      title: "Rafał Kowalkowski — ACRUX | ODART",
+      title: "Rafał Kowalkowski — lekcje gitary, wokal i fotografia",
       description:
-        "Fotografia, nagrania, strony internetowe i IT — jedna strona podsumowująca ofertę artystyczną i techniczną.",
+        "Kołobrzeg: indywidualne lekcje gitary i wokalu, nagrania oraz sesje fotograficzne.",
       url: canonical,
       locale: "pl_PL",
       type: "profile",
-      siteName: "ODART",
+      siteName: "Rafał Kowalkowski",
       images: [
         {
           url: RAFAL_KOWALKOWSKI_PORTRAIT_URL,

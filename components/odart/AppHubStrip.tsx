@@ -1,9 +1,10 @@
-import { UtensilsCrossed, ShoppingBag, Sparkles, Wrench, Factory } from "lucide-react";
+import { Globe, UtensilsCrossed, ShoppingBag, Sparkles, Wrench, Factory } from "lucide-react";
 import type { OdartLocale } from "@/components/odart/odartNav";
 
 const COPY = {
   pl: {
     label: "Aplikacje ODART",
+    zaamow: "zaamow.pl",
     food: "Jedzenie",
     store: "Sklep",
     clinics: "Gabinety",
@@ -12,6 +13,7 @@ const COPY = {
   },
   en: {
     label: "ODART Apps",
+    zaamow: "zaamow.pl",
     food: "Food",
     store: "Store",
     clinics: "Clinics",
@@ -30,6 +32,14 @@ export function AppHubStrip({ locale = "pl" }: { locale?: OdartLocale }) {
         <span className="hidden font-medium text-stone-300 sm:inline">{copy.label}</span>
         <nav className="flex flex-wrap items-center justify-center gap-2 sm:gap-3" aria-label={copy.label}>
           <a
+            href="https://zaamow.pl/"
+            className="inline-flex items-center gap-1.5 rounded-full bg-odart-accent/90 px-3 py-1.5 font-medium text-white shadow-sm transition hover:bg-odart-accent"
+            rel="noopener noreferrer"
+          >
+            <Globe className="h-4 w-4" aria-hidden />
+            {copy.zaamow}
+          </a>
+          <a
             href="https://zamow.odart.pl/"
             className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 font-medium text-white ring-1 ring-white/15 transition hover:bg-white/20"
             rel="noopener noreferrer"
@@ -39,7 +49,7 @@ export function AppHubStrip({ locale = "pl" }: { locale?: OdartLocale }) {
           </a>
           <a
             href="https://app.odart.pl/sklep"
-            className="inline-flex items-center gap-1.5 rounded-full bg-odart-accent/90 px-3 py-1.5 font-medium text-white shadow-sm transition hover:bg-odart-accent"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 font-medium text-white ring-1 ring-white/15 transition hover:bg-white/20"
             rel="noopener noreferrer"
           >
             <ShoppingBag className="h-4 w-4" aria-hidden />

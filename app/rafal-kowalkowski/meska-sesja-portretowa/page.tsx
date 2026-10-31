@@ -16,12 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
   const canonical = await canonicalForRafalSection(RAFAL_KOWALKOWSKI_MESKA_SESJA_PATH);
   return {
-    title: { absolute: "Męska sesja portretowa — Rafał Kowalkowski | ODART" },
+    title: { absolute: "Fotograf Kołobrzeg — męska sesja portretowa | Rafał Kowalkowski" },
     description:
-      "Męska sesja portretowa — studio lub plener, zdjęcia które przykuwają uwagę. Rafał Kowalkowski, Kołobrzeg.",
+      "Fotograf Kołobrzeg: męska sesja portretowa w studiu lub plenerze. Zdjęcia do portfolio, social i druku — Rafał Kowalkowski.",
     alternates: { canonical },
     openGraph: {
-      title: "Męska sesja portretowa | ODART",
+      title: "Fotograf Kołobrzeg — męska sesja portretowa",
       description: "Portret męski w studiu lub plenerze — profesjonalna sesja zdjęciowa.",
       url: canonical,
       locale: "pl_PL",

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/db";
 import { mapVetAppointmentRow } from "@/lib/vet/appointmentDisplay";
+import { requireVetClinicSession } from "@/lib/requireClinicApiSession";
 
 export async function GET(request: NextRequest) {
+  const gate = await requireVetClinicSession();
+  if (!gate.ok) return gate.response;
+
   const month = request.nextUrl.searchParams.get("month")?.trim() || new Date().toISOString().slice(0, 7);
   const singleDate = request.nextUrl.searchParams.get("date")?.trim();
   const vetDoctorId = request.nextUrl.searchParams.get("staff_id")?.trim();
@@ -27,14 +31,16 @@ export async function GET(request: NextRequest) {
     dateTo = `${year}-${String(monthNum).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
   }
 
-  let vetClinicId: string | null = null;
-  if (vetSlug) {
+  let vetClinicId: string | null = gate.session.admin ? null : gate.session.vetClinicId;
+  if (gate.session.admin && vetSlug) {
     const prisma = getPrisma();
     const clinic = await prisma.vetClinic.findFirst({
       where: { slug: vetSlug },
       select: { id: true },
     });
     if (clinic) vetClinicId = clinic.id;
+  } else if (!gate.session.admin) {
+    vetClinicId = gate.session.vetClinicId;
   }
 
   const appointments: Record<string, ReturnType<typeof mapVetAppointmentRow>[]> = {};

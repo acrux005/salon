@@ -11,6 +11,13 @@ interface ClinicListProps {
   clinics?: import("@/lib/skinmatch/schema").ClinicRecord[];
 }
 
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
 /** Lista gabinetów (strona /portal/gabinety). Opcjonalnie filtrowana po mieście. */
 export function ClinicList({ city, clinics: clinicsProp }: ClinicListProps) {
   const clinics = clinicsProp ?? getAllClinicRecords(city ?? undefined);
@@ -38,8 +45,15 @@ export function ClinicList({ city, clinics: clinicsProp }: ClinicListProps) {
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {clinics.map((clinic) => {
         const imgSrc = clinic.avatarUrl
-          ? (clinic.avatarUrl.startsWith("http") ? clinic.avatarUrl : `${BASE_PATH}${clinic.avatarUrl}`)
+          ? clinic.avatarUrl.startsWith("http")
+            ? clinic.avatarUrl
+            : `${BASE_PATH}${clinic.avatarUrl}`
           : null;
+        const specs = clinic.specializations
+          .map((pid) => PROBLEM_LABELS[pid as ProblemId])
+          .filter(Boolean);
+        const hasReviews = clinic.reviewCount > 0 && clinic.rating > 0;
+
         return (
           <div
             key={clinic.id}
@@ -60,8 +74,11 @@ export function ClinicList({ city, clinics: clinicsProp }: ClinicListProps) {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-[13px] text-neutral-400">
-                  Zdjęcie / brand
+                <div className="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-pink-50 to-neutral-100">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/80 font-[var(--font-sans)] text-lg font-semibold text-pink-600 shadow-sm">
+                    {initials(clinic.name)}
+                  </span>
+                  <span className="sr-only">Brak zdjęcia profilowego</span>
                 </div>
               )}
             </Link>
@@ -72,11 +89,19 @@ export function ClinicList({ city, clinics: clinicsProp }: ClinicListProps) {
               <p className="mt-0.5 font-[var(--font-sans)] text-[14px] text-[#6F5E64]">
                 {clinic.city}
               </p>
-              <p className="mt-2 font-[var(--font-sans)] text-[13px] text-[#6F5E64]">
-                {clinic.specializations.map((pid) => PROBLEM_LABELS[pid as ProblemId]).join(", ")}
-              </p>
+              {specs.length > 0 ? (
+                <p className="mt-2 font-[var(--font-sans)] text-[13px] text-[#6F5E64]">
+                  {specs.join(", ")}
+                </p>
+              ) : (
+                <p className="mt-2 font-[var(--font-sans)] text-[13px] text-neutral-400">
+                  Specjalizacje w uzupełnieniu
+                </p>
+              )}
               <p className="mt-1 font-[var(--font-sans)] text-[13px] font-medium text-pink-600">
-                ⭐ {clinic.rating} ({clinic.reviewCount})
+                {hasReviews
+                  ? `⭐ ${clinic.rating} (${clinic.reviewCount})`
+                  : "Brak opinii"}
               </p>
               <Link
                 href={`/portal/gabinet/${clinic.slug}`}

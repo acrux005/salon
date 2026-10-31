@@ -13,20 +13,24 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Zasady pozycjonowania SEO stron internetowych | ODART",
+    title: {
+      absolute: "Pozycjonowanie stron Kołobrzeg | SEO lokalne od ODART",
+    },
     description:
-      "SEO: słowa kluczowe, URL, treść, linki, multimedia, LSI, Search Console i więcej. Poradnik ODART — Kołobrzeg.",
+      "Pozycjonowanie stron w Kołobrzegu: SEO lokalne, treść, linki, Search Console. Rafał Kowalkowski — ODART. Tel. 695 432 415 — zapytaj o wycenę.",
     keywords: [
+      "pozycjonowanie stron Kołobrzeg",
       "pozycjonowanie SEO",
-      "SEO strony internetowej",
+      "SEO Kołobrzeg",
+      "pozycjonowanie stron internetowych Kołobrzeg",
       "optymalizacja SEO",
       "Google Search Console",
-      "słowa kluczowe",
     ],
     alternates: { canonical: CANONICAL },
     openGraph: {
-      title: "Zasady pozycjonowania SEO | ODART",
-      description: "Praktyczny przegląd działań SEO dla stron WWW.",
+      title: "Pozycjonowanie stron Kołobrzeg | ODART",
+      description:
+        "SEO lokalne w Kołobrzegu — treść, linki, Search Console. Tel. 695 432 415.",
       url: CANONICAL,
       locale: "pl_PL",
       type: "article",

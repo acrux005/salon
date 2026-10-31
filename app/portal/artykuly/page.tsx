@@ -21,7 +21,7 @@ export const metadata = {
 const ARTICLES = [
   { slug: "przygotowanie-skory", title: "Jak przygotować skórę do zabiegu?" },
   { slug: "tradzik-doroslych", title: "Trądzik dorosłych: co działa, a co szkodzi?" },
-  { slug: "przebarwienia-plan", title: "Przebarwienia: plan terapii na 6 tygodni" },
+  { slug: "przebarwienia-plan", title: "Przebarwienia: od czego zacząć dobór pielęgnacji i zabiegów?" },
   { slug: "anti-aging-dom", title: "Pielęgnacja anti-aging w domu" },
   { slug: "naczynka-cera", title: "Cera naczynkowa — czego unikać?" },
   { slug: "manicure-wybor", title: "Jak wybrać manicure, który naprawdę się trzyma?" },

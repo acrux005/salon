@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  AlertTriangle,
   ArrowRight,
   Building2,
   Camera,
@@ -129,14 +130,12 @@ const scopeCards: {
 
 const itPackages: {
   name: string;
-  price: string;
   subtitle?: string;
   highlight?: boolean;
   features: string[];
 }[] = [
   {
     name: "Basic",
-    price: "100 zł /mies",
     features: [
       "Reaguję, gdy coś się zepsuje",
       "Wsparcie e-mail",
@@ -148,8 +147,7 @@ const itPackages: {
   },
   {
     name: "Standard",
-    price: "200 zł /mies",
-    subtitle: "Najczęściej wybierany",
+    subtitle: "Najczęściej to właśnie to",
     highlight: true,
     features: [
       "Pilnuję, żeby się nie psuło",
@@ -162,7 +160,6 @@ const itPackages: {
   },
   {
     name: "Professional",
-    price: "500 zł /mies",
     features: [
       "Przejmuję odpowiedzialność za IT",
       "Wsparcie całodobowe",
@@ -243,6 +240,14 @@ export function OdartOpiekaItDlaFirmKolobrzegPage() {
               Małe i średnie firmy · reakcja tego samego dnia · wsparcie zdalne i na miejscu
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href={`${ODART_SITE_URL}/pogotowie-it/#zgloszenie`}
+                className="inline-flex items-center gap-2 rounded-lg border border-red-500/80 px-8 py-3.5 text-[15px] font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                aria-label="Zgłoś awarię IT"
+              >
+                <AlertTriangle className="h-5 w-5 shrink-0" aria-hidden />
+                Zgłoś awarię
+              </Link>
               <a
                 href="#kontakt-opieka-it"
                 className="inline-flex items-center rounded-lg bg-odart-accent px-8 py-3.5 text-[15px] font-semibold text-white hover:brightness-110"
@@ -367,6 +372,42 @@ export function OdartOpiekaItDlaFirmKolobrzegPage() {
           </div>
         </section>
 
+        <section className="border-b border-white/10 bg-neutral-950/30 px-4 py-14 lg:px-6">
+          <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
+            <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+              <h2 className="text-xl font-bold text-white">IT dla hoteli i pensjonatów</h2>
+              <p className="mt-3 text-neutral-400 leading-relaxed">
+                W sezonie obiekt nie może stać bez Wi-Fi i kasy. Oddzielam sieć gości od recepcji, pilnuję łącza i POS —
+                a opiekę IT biorę na abonament, żeby awarie nie wracały.
+              </p>
+              <Link
+                href={`${SITE}/it-dla-hoteli/`}
+                className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+              >
+                Oferta dla hoteli
+                <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
+            </article>
+            <article className="rounded-2xl border border-odart-accent/25 bg-odart-accent/5 p-6">
+              <h2 className="text-xl font-bold text-white">Awaria teraz — pogotowie IT</h2>
+              <p className="mt-3 text-neutral-400 leading-relaxed">
+                Opieka zapobiega przestojom. Gdy już stoi praca — dzwoń{" "}
+                <a href="tel:+48695432415" className="font-semibold text-odart-accent hover:text-orange-300">
+                  695 432 415
+                </a>
+                . Krótka ścieżka awaryjna, bez fałszywego systemu ticketów.
+              </p>
+              <Link
+                href={`${SITE}/pogotowie-it/`}
+                className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+              >
+                Pogotowie IT
+                <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+              </Link>
+            </article>
+          </div>
+        </section>
+
         {/* Tworzenie stron — duża karta 2 kolumny jak demo */}
         <section className="border-b border-white/10 px-4 py-16 lg:px-6">
           <div className="mx-auto max-w-6xl">
@@ -418,9 +459,9 @@ export function OdartOpiekaItDlaFirmKolobrzegPage() {
 
         <section className="border-b border-white/10 px-4 py-16 lg:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Pakiety</h2>
+            <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Zakres opieki</h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-neutral-400">
-              Wybierz pakiet wsparcia IT dopasowany do Twoich potrzeb
+              Trzy typowe warianty. Kwotę ustalamy po rozmowie o liczbie stanowisk i tym, co już macie.
             </p>
             <div className="mt-12 grid gap-8 lg:grid-cols-3">
               {itPackages.map((pkg) => (
@@ -436,7 +477,6 @@ export function OdartOpiekaItDlaFirmKolobrzegPage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-odart-accent/90">{pkg.subtitle}</p>
                   ) : null}
                   <h3 className={`text-xl font-bold text-white ${pkg.subtitle ? "mt-2" : ""}`}>{pkg.name}</h3>
-                  <p className="mt-6 text-2xl font-bold text-odart-accent">{pkg.price}</p>
                   <ul className="mt-6 flex-1 space-y-3 text-sm text-neutral-400">
                     {pkg.features.map((f) => (
                       <li key={f} className="flex gap-2">

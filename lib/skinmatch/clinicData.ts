@@ -54,6 +54,8 @@ export interface ClinicPageData {
   };
   /** Otwórz modal rezerwacji po powrocie z logowania/rejestracji (?rezerwacja=1). */
   initialOpenBooking?: boolean;
+  /** Konto właściciela zweryfikowane — profil przejęty. */
+  claimed?: boolean;
 }
 
 export async function buildClinicPageData(record: ClinicRecord): Promise<ClinicPageData> {

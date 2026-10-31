@@ -70,10 +70,10 @@ export const ODART_ENGLISH_SERVICES: OdartEnglishService[] = [
   },
   {
     slug: "website-from-pln-1500",
-    label: "Website from PLN 1500",
-    title: "Website from PLN 1500",
+    label: "One-page website",
+    title: "One-page website",
     description:
-      "A practical starting package for a professional website with clear structure, responsive design and basic setup.",
+      "A short company site: offer, contact, works on a phone. Design, build and launch.",
     intro:
       "This offer is for businesses that need a clean and functional website without unnecessary complexity at the start.",
     bestFor: ["Small companies starting online", "Simple service websites", "Projects with a clear scope and limited number of pages"],

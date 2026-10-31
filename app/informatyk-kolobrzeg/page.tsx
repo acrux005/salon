@@ -13,21 +13,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Usługi informatyczne Kołobrzeg",
+    title: {
+      absolute: "Informatyk Kołobrzeg — sieci, ERP, opieka IT | ODART",
+    },
     description:
-      "Projektowanie sieci, konfiguracja routerów i firewalli, ERP Comarch Optima i Enova, backup w chmurze AWS/Azure/GCP, audyt IT. Kołobrzeg.",
+      "IT dla firm z Kołobrzegu: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
     keywords: [
       "informatyk Kołobrzeg",
+      "usługi informatyczne Kołobrzeg",
       "usługi IT Kołobrzeg",
-      "sieci komputerowe",
-      "Comarch Optima",
-      "backup chmura",
+      "opieka IT Kołobrzeg",
+      "Comarch Optima Kołobrzeg",
     ],
     alternates: { canonical: CANONICAL },
     openGraph: {
-      title: "Usługi informatyczne Kołobrzeg | ODART",
+      title: "Informatyk Kołobrzeg — sieci, ERP, opieka IT | ODART",
       description:
-        "Wsparcie IT dla firm: sieci, bezpieczeństwo, ERP, kopie zapasowe i audyt infrastruktury.",
+        "IT dla firm z Kołobrzegu: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
       url: CANONICAL,
       locale: "pl_PL",
       type: "website",

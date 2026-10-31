@@ -5,7 +5,7 @@ import Link from "next/link";
 const ARTICLES = [
   { title: "Jak przygotować skórę do zabiegu?", href: "/portal/artykuly/przygotowanie-skory" },
   { title: "Trądzik dorosłych: co działa, a co szkodzi?", href: "/portal/artykuly/tradzik-doroslych" },
-  { title: "Przebarwienia: plan terapii na 6 tygodni", href: "/portal/artykuly/przebarwienia-plan" },
+  { title: "Przebarwienia: od czego zacząć dobór pielęgnacji i zabiegów?", href: "/portal/artykuly/przebarwienia-plan" },
   { title: "Jak wybrać manicure, który naprawdę się trzyma?", href: "/portal/artykuly/manicure-wybor" },
   { title: "Masaż relaksacyjny czy sportowy — co wybrać?", href: "/portal/artykuly/masaz-relaksacyjny-sportowy" },
 ];
@@ -18,14 +18,14 @@ export function BlogSection() {
       style={{ background: "#FFF8FB" }}
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-4 text-center font-[var(--font-serif)] text-2xl font-normal text-[#1F1A1C] sm:text-3xl">
-          Poradnik zabiegów i pielęgnacji
+        <h2 className="mb-3 text-center font-[var(--font-serif)] text-2xl font-normal text-[#1F1A1C] sm:text-3xl">
+          Poradnik beauty
         </h2>
         <p className="mx-auto mb-12 max-w-xl text-center font-[var(--font-sans)] text-[15px] text-[#6F5E64]">
-          Wiedza o twarzy, ciele, paznokciach i zabiegach — w stylu premium.
+          Poznaj zabiegi, przygotuj się do wizyty i sprawdź, na co zwrócić uwagę przy wyborze salonu.
         </p>
         <div className="grid gap-6 sm:grid-cols-3">
-          {ARTICLES.map(({ title, href }) => (
+          {ARTICLES.slice(0, 3).map(({ title, href }) => (
             <Link
               key={href}
               href={href}

@@ -189,7 +189,7 @@ export function OdartProduktStronaInternetowaWordpressPage({
                 href={`${SITE}/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl`}
                 className="text-odart-accent hover:text-orange-300"
               >
-                Sprawdź ofertę stron od 1500 zł
+                Sprawdź ofertę strony one page
               </Link>{" "}
               lub{" "}
               <Link href={`${SITE}/kontakt/`} className="text-odart-accent hover:text-orange-300">

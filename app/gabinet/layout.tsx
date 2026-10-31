@@ -15,6 +15,13 @@ const gabFont = DM_Sans({
   display: "swap",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+  themeColor: "#0ea5e9",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host") ?? "";
   const vertical = getGabinetVerticalConfigForHost(host);
@@ -41,7 +48,7 @@ export default async function GabinetLayout({ children }: { children: React.Reac
     <GabHostProvider isGabinetPortal={isGabinetPortal}>
       <GabVerticalProvider verticalId={verticalId}>
         <div
-          className={`gab-portal ${gabFont.variable} flex min-h-dvh flex-col bg-sky-50/30 font-[family-name:var(--font-gab)] text-gab-navy antialiased`}
+          className={`gab-portal ${gabFont.variable} flex min-h-dvh w-full min-w-0 flex-col overflow-x-clip bg-sky-50/30 pb-[env(safe-area-inset-bottom)] font-[family-name:var(--font-gab)] text-gab-navy antialiased`}
         >
           <GabLayoutChrome>{children}</GabLayoutChrome>
         </div>

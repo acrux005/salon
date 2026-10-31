@@ -5,9 +5,9 @@ import { ODART_SITE_URL } from "@/lib/odartSite";
 const SITE = ODART_SITE_URL;
 
 export const metadata: Metadata = {
-  title: "ODART - Web applications and business websites | Poland",
+  title: "ODART — websites and apps | Kolobrzeg, Poland",
   description:
-    "Custom web applications, business websites, WordPress, SEO and IT support by ODART - Rafal Kowalkowski, Kolobrzeg, Poland.",
+    "Websites, web apps and IT support. Rafal Kowalkowski, ODART. Kolobrzeg, since 2008.",
   alternates: {
     canonical: `${SITE}/en/`,
     languages: {
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "ODART - Web applications and business websites",
+    title: "ODART — websites and apps",
     description:
-      "Custom web applications, business websites, WordPress, SEO and IT support from Kolobrzeg, Poland.",
+      "Websites, web apps and IT support from Kolobrzeg, Poland.",
     url: `${SITE}/en/`,
     siteName: "ODART",
     locale: "en_US",
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ODART - Web applications and business websites",
-    description: "Custom web applications, business websites, WordPress, SEO and IT support.",
+    title: "ODART — websites and apps",
+    description: "Websites, web apps and IT support. Kolobrzeg, Poland.",
   },
 };
 

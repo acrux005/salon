@@ -39,8 +39,8 @@ export function GabPanelShell({
   const [narzedziaExpanded, setNarzedziaExpanded] = useState(narzedziaOpen);
 
   return (
-    <div className="min-h-[calc(100dvh-4rem)] bg-gradient-to-br from-slate-50 via-sky-50/40 to-slate-100">
-      <div className="mx-auto flex max-w-[90rem] gap-0 px-0 lg:gap-6 lg:px-6 lg:py-6">
+    <div className="min-h-[calc(100dvh-4rem)] min-w-0 bg-gradient-to-br from-slate-50 via-sky-50/40 to-slate-100">
+      <div className="mx-auto flex min-w-0 max-w-[90rem] gap-0 px-0 lg:gap-6 lg:px-6 lg:py-6">
         <aside className="hidden w-[17rem] shrink-0 lg:block">
           <nav className="sticky top-20 space-y-6">
             <div className="rounded-2xl border border-white/80 bg-white/90 p-3 shadow-sm shadow-slate-200/50 backdrop-blur-sm">
@@ -232,13 +232,12 @@ export function GabPanelShell({
         </aside>
 
         <div className="min-w-0 flex-1">
-          <div className="border-b border-slate-200/60 bg-white/80 px-4 py-3 backdrop-blur-sm lg:rounded-t-2xl lg:border lg:border-b-0 lg:border-slate-200/80">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <GabPanelMobileMenu />
-            </div>
+          <div className="flex items-center justify-between gap-3 border-b border-slate-200/60 bg-white/80 px-4 py-3 backdrop-blur-sm lg:hidden">
+            <p className="text-[13px] font-semibold text-gab-navy">Menu panelu</p>
+            <GabPanelMobileMenu />
           </div>
 
-          <main className="min-h-[calc(100dvh-10rem)] bg-white lg:rounded-b-2xl lg:border lg:border-t-0 lg:border-slate-200/80 lg:shadow-sm lg:shadow-slate-200/40">
+          <main className="min-h-[calc(100dvh-8rem)] bg-white lg:rounded-2xl lg:border lg:border-slate-200/80 lg:shadow-sm lg:shadow-slate-200/40">
             {emailUnverified && (
               <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-[14px] text-amber-900">
                 Potwierdź adres e-mail administratora —{" "}

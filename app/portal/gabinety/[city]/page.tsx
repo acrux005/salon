@@ -9,6 +9,10 @@ import { ChevronRight } from "lucide-react";
 
 type Props = { params: Promise<{ city: string }> };
 
+/** Katalog miast musi widzieć świeże importy CEIDG bez rebuildu. */
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const SITE_URL = "https://salon.odart.pl";
 
 function cityHeading(city: NonNullable<ReturnType<typeof getPortalCityBySlug>>): string {

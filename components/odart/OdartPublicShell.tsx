@@ -33,7 +33,7 @@ const COPY = {
   pl: {
     location: "Kołobrzeg",
     footerTitle: "Strony internetowe",
-    footerLead: "Zostaw adres e-mail — odpowiem, gdy tylko będzie to możliwe.",
+    footerLead: "Napisz na biuro@odart.pl. Odpowiadam zwykle tego samego dnia.",
     about: "O mnie",
     projects: "Realizacje",
     portfolio: "Portfolio",
@@ -44,7 +44,12 @@ const COPY = {
     developerPage: "Strona dla dewelopera",
     websites: "Strony internetowe",
     itCare: "Opieka IT dla firm Kołobrzeg",
-    rights: "All Rights Reserved",
+    zaamow: "zaamow.pl",
+    zaamowDomains: "Domeny .pl",
+    zaamowMail: "Poczta firmowa",
+    zaamowSites: "Strony WWW",
+    zaamowApps: "Aplikacje",
+    rights: "Wszelkie prawa zastrzeżone",
     polish: "PL",
     english: "EN",
   },
@@ -62,6 +67,11 @@ const COPY = {
     developerPage: "Real estate developer website",
     websites: "Business websites",
     itCare: "IT support for companies",
+    zaamow: "zaamow.pl",
+    zaamowDomains: ".pl domains",
+    zaamowMail: "Business email",
+    zaamowSites: "Websites",
+    zaamowApps: "Apps",
     rights: "All Rights Reserved",
     polish: "PL",
     english: "EN",
@@ -223,11 +233,33 @@ export function OdartPublicShell({ children, activeNav, jsonLd, locale = "pl" }:
                 <Link href={`${marketing}/opieka-it-dla-firm-kolobrzeg/`} className="hover:text-white">
                   {copy.itCare}
                 </Link>
+                <Link href={`${marketing}/zaamow/`} className="hover:text-white">
+                  {copy.zaamow}
+                </Link>
+                <a href="https://zaamow.pl/domeny" className="hover:text-white" rel="noopener noreferrer">
+                  {copy.zaamowDomains}
+                </a>
+                <a href="https://zaamow.pl/poczta" className="hover:text-white" rel="noopener noreferrer">
+                  {copy.zaamowMail}
+                </a>
+                <a href="https://zaamow.pl/strony" className="hover:text-white" rel="noopener noreferrer">
+                  {copy.zaamowSites}
+                </a>
+                <a href="https://zaamow.pl/aplikacje" className="hover:text-white" rel="noopener noreferrer">
+                  {copy.zaamowApps}
+                </a>
               </div>
             </div>
             <div className="mt-10 flex flex-wrap gap-6 border-t border-white/10 pt-8 text-sm text-neutral-600">
               <span>© {new Date().getFullYear()} ODART | {copy.rights}</span>
               <span>{copy.location} · biuro@odart.pl · +48 695 432 415</span>
+              <a
+                href="https://zaamow.pl"
+                className="text-neutral-500 hover:text-odart-accent"
+                rel="noopener noreferrer"
+              >
+                {copy.zaamow}
+              </a>
             </div>
           </div>
         </footer>

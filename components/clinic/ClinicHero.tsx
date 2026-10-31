@@ -22,7 +22,7 @@ export function ClinicHero() {
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <span className="inline-flex items-center gap-1.5 font-[var(--font-sans)] text-[15px] text-[#1F1A1C]">
                 <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden />
-                {profile.rating} ({profile.reviewCount} opinii)
+                {profile.reviewCount > 0 ? `${profile.rating} (${profile.reviewCount} opinii)` : "Brak opinii"}
               </span>
               <span className="inline-flex items-center gap-1.5 font-[var(--font-sans)] text-[15px] text-[#6F5E64]">
                 <MapPin className="h-4 w-4 shrink-0" aria-hidden />

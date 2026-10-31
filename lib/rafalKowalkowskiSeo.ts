@@ -51,7 +51,7 @@ export function buildRafalHomeJsonLd() {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
         url: pageUrl,
-        name: "Rafał Kowalkowski — fotografia, nagrania, strony | ODART",
+        name: "Rafał Kowalkowski — lekcje gitary, wokal i fotografia | Kołobrzeg",
         isPartOf: { "@id": `${RAFAL_CANONICAL_ORIGIN}/#website` },
         inLanguage: "pl-PL",
       },
@@ -61,7 +61,8 @@ export function buildRafalHomeJsonLd() {
         name: "Rafał Kowalkowski",
         url: RAFAL_CANONICAL_ORIGIN,
         image: RAFAL_KOWALKOWSKI_PORTRAIT_URL,
-        jobTitle: "Fotograf, producent muzyczny, programista",
+        jobTitle: "Nauczyciel gitary, nauczyciel wokalu, fotograf",
+        knowsAbout: ["nauka gry na gitarze", "zajęcia wokalne", "fotografia portretowa"],
         worksFor: { "@type": "Organization", name: "ODART", url: ODART_ORIGIN },
         sameAs: [...RAFAL_SOCIAL_SAME_AS],
       },
@@ -69,7 +70,7 @@ export function buildRafalHomeJsonLd() {
         "@type": "WebSite",
         "@id": `${RAFAL_CANONICAL_ORIGIN}/#website`,
         url: RAFAL_CANONICAL_ORIGIN,
-        name: "Rafał Kowalkowski — ACRUX",
+        name: "Rafał Kowalkowski — lekcje gitary, wokal, fotografia",
         publisher: { "@id": `${RAFAL_CANONICAL_ORIGIN}/#person` },
         inLanguage: "pl-PL",
       },
@@ -230,8 +231,29 @@ export function rafalKowalkowskiSitemapEntries(now = new Date()): MetadataRoute.
     url,
     lastModified: now,
     changeFrequency: "monthly" as const,
-    priority: url.replace(/\/$/, "") === RAFAL_CANONICAL_ORIGIN ? 1 : 0.82,
+    priority: rafalSitemapPriority(url),
   }));
+}
+
+function rafalSitemapPriority(url: string): number {
+  const path = url.replace(RAFAL_CANONICAL_ORIGIN, "").replace(/\/$/, "") || "/";
+  if (path === "/") return 1;
+  if (path.includes("nauka-gry-na-gitarze") || path.includes("zajecia-wokalne")) return 0.95;
+  if (
+    path.includes("nagranie-wokalu") ||
+    path.includes("nagranie-piosenki") ||
+    path.includes("sesja") ||
+    path.includes("galeria") ||
+    path.includes("kompozycja") ||
+    path.includes("zloty-podzial") ||
+    path.includes("zlota-proporcja")
+  ) {
+    return 0.9;
+  }
+  if (path.includes("uslugi-informatyczne") || path.includes("budowa-strony") || path.includes("obsluga-mediow")) {
+    return 0.35;
+  }
+  return 0.7;
 }
 
 export function rafalKowalkowskiRobots(): MetadataRoute.Robots {
@@ -240,7 +262,7 @@ export function rafalKowalkowskiRobots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/demo", "/demo/", "/rafal-kowalkowski", "/rafal-kowalkowski/", "/api/"],
+        disallow: ["/demo", "/demo/", "/api/"],
       },
     ],
     sitemap: `${RAFAL_CANONICAL_ORIGIN}/sitemap.xml`,

@@ -4,6 +4,7 @@ import { withAuth } from "next-auth/middleware";
 import { applyRafalKowalkowskiRouting } from "@/lib/rafalKowalkowskiMiddleware";
 import { getSalonMarketingRedirect } from "@/lib/salonSeo";
 import { isGabinetPortalHost, resolveGabinetAppPath } from "@/lib/gabinetPlatform/host";
+import { isGabinetAppPath } from "@/lib/gabinetPlatform/paths";
 import { isAuthorizedGabinetPath } from "@/lib/gabinetPlatform/authGate";
 import { isWetPortalHost, resolveWetAppPath } from "@/lib/wetHost";
 import { isAuthorizedWetPath } from "@/lib/wetAuthGate";
@@ -30,7 +31,7 @@ function applyGabinetCanonicalRedirect(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   if (!isGabinetPortalHost(host)) return null;
   const { pathname, search } = request.nextUrl;
-  if (!pathname.startsWith("/gabinet")) return null;
+  if (!isGabinetAppPath(pathname)) return null;
   const dest = pathname === "/gabinet" ? "/" : pathname.slice(8) || "/";
   return NextResponse.redirect(new URL(`${dest}${search}`, request.url), 308);
 }
@@ -89,7 +90,7 @@ function applyRandkiBlockSalonRoutes(request: NextRequest) {
     path.startsWith("/portal") ||
     path.startsWith("/zabiegi") ||
     path.startsWith("/wet") ||
-    path.startsWith("/gabinet") ||
+    isGabinetAppPath(path) ||
     path === "/panel/logowanie" ||
     path.startsWith("/panel/logowanie/")
   ) {
@@ -139,7 +140,7 @@ const authMiddleware = withAuth(
         const host = req.headers.get("host") ?? "";
         const path = resolveAppPath(req.nextUrl.pathname, host);
 
-        if (path.startsWith("/gabinet") || path.startsWith("/api/gabinet/")) {
+        if (isGabinetAppPath(path) || path.startsWith("/api/gabinet/")) {
           return isAuthorizedGabinetPath(token, path);
         }
 
@@ -164,6 +165,12 @@ const authMiddleware = withAuth(
           if (path.startsWith("/portal/powiadomienia")) return !!token;
           if (path.startsWith("/portal/wiadomosci")) return !!token;
           if (path.startsWith("/portal/panel")) return !!token;
+        }
+        if (
+          path.startsWith("/api/booking/appointments") ||
+          path.startsWith("/api/booking/calendar")
+        ) {
+          return !!token;
         }
         return true;
       },

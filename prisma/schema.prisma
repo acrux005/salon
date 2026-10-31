@@ -183,6 +183,11 @@ model Clinic {
   cosmoStaffId    Int?
   workingHours    String?
   bookingPhoneOnly Boolean @default(false)
+  /** null = własny / panel; ceidg | google = katalog nieprzejęty */
+  listingSource   String?
+  ceidgId         String?  @unique
+  nip             String?
+  googlePlaceId   String?
   updatedAt       DateTime @updatedAt
 
   account         ClinicAccount?
@@ -191,6 +196,10 @@ model Clinic {
   clinicBookings  ClinicBooking[]
   clinicReviews   ClinicReview[]
   favoriteBy      ClientFavoriteClinic[]
+
+  @@index([listingSource])
+  @@index([city])
+  @@index([isPublished])
 }
 
 model ClinicBooking {

@@ -1,7 +1,6 @@
 "use client";
 
-const IMG_ABOUT =
-  "https://salon.odart.pl/wp-content/uploads/2026/02/womanbeautyy.jpg";
+const IMG_ABOUT = "/womanbeautyy.jpg";
 
 export function OMnie() {
   const aboutText = [

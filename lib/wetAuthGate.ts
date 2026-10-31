@@ -31,6 +31,12 @@ export function isAuthorizedWetPath(token: JWT | null, internalPath: string): bo
   if (internalPath.startsWith("/api/wet/pets/extract-document")) {
     return !!token;
   }
+  if (internalPath.startsWith("/api/wet/booking/calendar")) {
+    return !!token && (token.role === "vet" || token.role === "admin");
+  }
+  if (internalPath.startsWith("/api/wet/booking/appointments")) {
+    return !!token && (token.role === "vet" || token.role === "admin");
+  }
   if (internalPath.startsWith("/wet/panel")) {
     return !!token && (token.role === "vet" || token.role === "admin");
   }

@@ -236,12 +236,12 @@ export function GabCalendarClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setViewDay((d) => addDaysYmd(d, -1))}
-            className="rounded-lg border border-slate-200 p-2 hover:bg-slate-50"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50"
             aria-label="Poprzedni dzień"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -250,12 +250,12 @@ export function GabCalendarClient({
             type="date"
             value={viewDay}
             onChange={(e) => setViewDay(e.target.value)}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-[14px]"
+            className="min-h-11 min-w-0 flex-1 rounded-lg border border-slate-200 px-3 py-2 text-base sm:flex-none"
           />
           <button
             type="button"
             onClick={() => setViewDay((d) => addDaysYmd(d, 1))}
-            className="rounded-lg border border-slate-200 p-2 hover:bg-slate-50"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50"
             aria-label="Następny dzień"
           >
             <ChevronRight className="h-4 w-4" />
@@ -263,12 +263,12 @@ export function GabCalendarClient({
           <button
             type="button"
             onClick={() => setViewDay(todayYmd())}
-            className="text-[13px] font-medium text-gab-sky hover:underline"
+            className="min-h-11 px-2 text-[13px] font-medium text-gab-sky hover:underline"
           >
             Dziś
           </button>
         </div>
-        <button type="button" onClick={() => setAddOpen(true)} className="gab-btn-primary inline-flex gap-2">
+        <button type="button" onClick={() => setAddOpen(true)} className="gab-btn-primary inline-flex w-full gap-2 sm:w-auto">
           <Plus className="h-4 w-4" /> Wizyta
         </button>
       </div>

@@ -1,0 +1,19 @@
+# ODART — lokalizacja i obszar działania
+
+name: ODART, Ostry Dyżur Artystyczny
+person: Rafał Kowalkowski
+nip: 5791020696
+phone: +48 695 432 415
+email: biuro@odart.pl
+address: 78-100 Kołobrzeg, Polska
+primary_area: Kołobrzeg i powiat kołobrzeski
+secondary_area: Koszalin, zachodniopomorskie; usługi WWW i IT zdalnie — cała Polska
+
+urls:
+- https://odart.pl/
+- https://odart.pl/it-dla-hoteli/
+- https://odart.pl/pogotowie-it/
+- https://odart.pl/opieka-it-dla-firm-kolobrzeg/
+- https://odart.pl/informatyk-kolobrzeg/
+- https://odart.pl/monitoring-i-kamery-kolobrzeg/
+- https://odart.pl/kontakt/

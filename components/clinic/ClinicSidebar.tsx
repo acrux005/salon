@@ -11,13 +11,14 @@ import { useClinicBooking } from "@/contexts/ClinicBookingContext";
 import { BookingCalendarModal } from "@/components/BookingCalendarModal";
 import { WaitlistForm } from "@/components/clinic/WaitlistForm";
 import { saveClientBookingAction } from "@/app/actions/client";
+import { clinicClaimPath } from "@/lib/catalogListing";
 
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export function ClinicSidebar() {
   const router = useRouter();
-  const { sidebar, hero, clinicSlug, clinicId, clinicCosmoStaffId, sessionInfo, initialOpenBooking, profile } = useClinicData();
+  const { sidebar, hero, clinicSlug, clinicId, clinicCosmoStaffId, sessionInfo, initialOpenBooking, profile, claimed } = useClinicData();
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
@@ -66,10 +67,10 @@ export function ClinicSidebar() {
   };
 
   useEffect(() => {
-    if (initialOpenBooking && isClient && clinicSlug) {
+    if (claimed !== false && initialOpenBooking && isClient && clinicSlug) {
       openCalendar();
     }
-  }, [initialOpenBooking, isClient, clinicSlug, openCalendar]);
+  }, [claimed, initialOpenBooking, isClient, clinicSlug, openCalendar]);
 
   const handleTermsClick = () => {
     if (isClient) {
@@ -120,7 +121,7 @@ export function ClinicSidebar() {
         <div className="p-6">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-[var(--font-sans)] text-[17px] font-semibold text-[#1F1A1C]">
-            {sidebar.title}
+            {claimed === false ? "Kontakt" : sidebar.title}
           </h3>
           {isClient && favoritesLoaded && clinicId && (
             <button
@@ -137,6 +138,33 @@ export function ClinicSidebar() {
             </button>
           )}
         </div>
+        {claimed === false ? (
+        <div className="mt-4 flex flex-col gap-3">
+          {sidebar.telHref && sidebar.telHref !== "#" ? (
+            <a
+              href={sidebar.telHref}
+              className="block w-full rounded-full bg-[#1F1A1C] py-3 text-center font-[var(--font-sans)] text-[15px] font-medium text-white hover:bg-neutral-800"
+            >
+              Skontaktuj się z gabinetem
+              <span className="mt-0.5 block text-[13px] font-normal opacity-90">📞 {sidebar.telLabel}</span>
+            </a>
+          ) : (
+            <p className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-3 text-[14px] leading-relaxed text-[#6F5E64]">
+              Nie mamy jeszcze danych umożliwiających kontakt z gabinetem.
+            </p>
+          )}
+          {clinicSlug ? (
+            <p className="text-center text-[13px] leading-relaxed text-[#4a3f42]">
+              Prowadzisz ten gabinet?{" "}
+              <Link href={clinicClaimPath(clinicSlug)} className="font-medium text-pink-600 hover:underline">
+                Przejmij profil bezpłatnie
+              </Link>
+              .
+            </p>
+          ) : null}
+        </div>
+        ) : (
+        <>
         <div className="mt-4 flex flex-col gap-3">
           <button
             type="button"
@@ -212,28 +240,51 @@ export function ClinicSidebar() {
             <WaitlistForm clinicSlug={clinicSlug} />
           </div>
         )}
+        </>
+        )}
         <div className="mt-6 flex flex-wrap gap-3 border-t border-neutral-100 pt-4">
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-[#6F5E64]">
-            <Shield className="h-3.5 w-3.5" aria-hidden />
-            Dane chronione (RODO)
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-[#6F5E64]">
-            <Lock className="h-3.5 w-3.5" aria-hidden />
-            Bezpieczna rezerwacja
-          </span>
+          {claimed !== false ? (
+            <>
+              <span className="inline-flex items-center gap-1.5 text-[12px] text-[#6F5E64]">
+                <Shield className="h-3.5 w-3.5" aria-hidden />
+                Dane chronione (RODO)
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[12px] text-[#6F5E64]">
+                <Lock className="h-3.5 w-3.5" aria-hidden />
+                Bezpieczna rezerwacja
+              </span>
+            </>
+          ) : null}
         </div>
         <div className="mt-4 border-t border-neutral-100 pt-4">
-          <a
-            href={sidebar.telHref}
-            className="flex items-center gap-2 font-[var(--font-sans)] text-[15px] text-[#1F1A1C] hover:text-pink-600"
-          >
-            <Phone className="h-4 w-4 shrink-0" aria-hidden />
-            {sidebar.telLabel}
-          </a>
-          <p className="mt-2 flex items-center gap-2 font-[var(--font-sans)] text-[14px] text-[#6F5E64]">
-            <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-            {sidebar.address}
-          </p>
+          {sidebar.telHref && sidebar.telHref !== "#" ? (
+            <a
+              href={sidebar.telHref}
+              className="flex items-center gap-2 font-[var(--font-sans)] text-[15px] text-[#1F1A1C] hover:text-pink-600"
+            >
+              <Phone className="h-4 w-4 shrink-0" aria-hidden />
+              {sidebar.telLabel}
+            </a>
+          ) : claimed === false ? null : (
+            <p className="flex items-center gap-2 font-[var(--font-sans)] text-[15px] text-[#6F5E64]">
+              <Phone className="h-4 w-4 shrink-0" aria-hidden />
+              {sidebar.telLabel}
+            </p>
+          )}
+          {sidebar.address ? (
+            <div className="mt-2">
+              <p className="flex items-start gap-2 font-[var(--font-sans)] text-[14px] text-[#6F5E64]">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                <span>{sidebar.address}</span>
+              </p>
+              {claimed === false ? (
+                <p className="mt-1 pl-6 font-[var(--font-sans)] text-[12px] text-neutral-400">
+                  Adres z danych rejestrowych (CEIDG) — może być adresem do doręczeń, niekoniecznie
+                  miejscem wizyt.
+                </p>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         </div>
       </div>

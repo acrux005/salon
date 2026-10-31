@@ -19,11 +19,12 @@ export type OdartServiceItem = { label: string; href: string };
 /** Lista usług do dropdownu w menu. */
 export const ODART_SERVICES: OdartServiceItem[] = [
   { label: "Wszystkie usługi", href: `${SITE}/uslugi/` },
+  { label: "zaamow.pl — domeny, poczta, aplikacje", href: `${SITE}/zaamow/` },
   { label: "Nowoczesne aplikacje webowe", href: `${SITE}/produkt/nowoczesne-aplikacje-webowe/` },
   { label: "Panele i systemy dla firm", href: `${SITE}/produkt/panele-i-systemy-dla-firm/` },
   { label: "Integracje API i automatyzacja", href: `${SITE}/produkt/integracje-api-i-automatyzacja/` },
   { label: "Strona internetowa", href: `${SITE}/strony-internetowe/` },
-  { label: "Strona od 1500 zł", href: `${SITE}/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl` },
+  { label: "Strona one page", href: `${SITE}/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl` },
   { label: "Tworzenie stron WordPress", href: `${SITE}/tworzenie-stron-internetowych-na-wordpressie` },
   { label: "Administracja WordPress", href: `${SITE}/administracja-stron-internetowych-wordpress` },
   { label: "Migracja strony internetowej", href: `${SITE}/produkt/migracja-strony-internetowej-na-inny-serwer/` },
@@ -35,16 +36,19 @@ export const ODART_SERVICES: OdartServiceItem[] = [
   { label: "Monitoring i kamery Kołobrzeg", href: `${SITE}/monitoring-i-kamery-kolobrzeg` },
   { label: "Opieka IT dla firm Kołobrzeg", href: `${SITE}/opieka-it-dla-firm-kolobrzeg` },
   { label: "Informatyk Kołobrzeg", href: `${SITE}/informatyk-kolobrzeg` },
+  { label: "IT dla hoteli i pensjonatów", href: `${SITE}/it-dla-hoteli/` },
+  { label: "Pogotowie IT — awaria", href: `${SITE}/pogotowie-it/` },
   { label: "Informatyk Koszalin", href: `${SITE}/informatyk-koszalin` },
 ];
 
 export const ODART_SERVICES_EN: OdartServiceItem[] = [
   { label: "All services", href: ODART_ENGLISH_SERVICES_INDEX },
+  { label: "zaamow.pl — domains, email, apps", href: "https://zaamow.pl" },
   { label: "Custom web applications", href: getEnglishServiceHref("custom-web-applications") },
   { label: "Business panels and systems", href: getEnglishServiceHref("business-panels-and-systems") },
   { label: "API integrations and automation", href: getEnglishServiceHref("api-integrations-and-automation") },
   { label: "Business websites", href: getEnglishServiceHref("business-websites") },
-  { label: "Website from PLN 1500", href: getEnglishServiceHref("website-from-pln-1500") },
+  { label: "One-page website", href: getEnglishServiceHref("website-from-pln-1500") },
   { label: "WordPress websites", href: getEnglishServiceHref("wordpress-websites") },
   { label: "WordPress administration", href: getEnglishServiceHref("wordpress-administration") },
   { label: "Website migration", href: getEnglishServiceHref("website-migration") },

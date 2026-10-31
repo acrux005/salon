@@ -32,9 +32,11 @@ export function isAuthorizedGabinetPath(token: JWT | null, internalPath: string)
     if (internalPath.startsWith("/api/gabinet/clinic")) return true;
     if (internalPath.startsWith("/api/gabinet/availability")) return true;
     if (internalPath.startsWith("/api/gabinet/booking/staff")) return true;
-    if (internalPath.startsWith("/api/gabinet/booking/calendar")) return true;
     if (internalPath === "/api/gabinet/booking") return true;
     if (internalPath.startsWith("/api/gabinet/booking/appointments/")) return !!token;
+    if (internalPath.startsWith("/api/gabinet/booking/calendar")) {
+      return !!token && (token.role === "gab_clinic" || token.role === "admin");
+    }
     return !!token;
   }
   return true;

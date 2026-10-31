@@ -5,14 +5,17 @@ import Image from "next/image";
 import { Star, MapPin } from "lucide-react";
 import { useClinicData } from "@/contexts/ClinicDataContext";
 import { useClinicContactModal } from "@/contexts/ClinicContactModalContext";
+import { clinicClaimPath } from "@/lib/catalogListing";
+import { splitCatalogClinicName } from "@/lib/catalog/clinicDisplayName";
 
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export function ClinicHeroCompact() {
-  const { profile, hero } = useClinicData();
+  const { profile, hero, claimed, clinicSlug } = useClinicData();
   const { openContactModal } = useClinicContactModal();
-  const name = profile.name.replace(/^Gabinet\s+/i, "");
+  const { displayName, legalName } = splitCatalogClinicName(profile.name);
+  const name = (displayName || profile.name).replace(/^Gabinet\s+/i, "");
   const rawUrl = (hero as { imageUrl?: string })?.imageUrl;
   const avatarSrc = !rawUrl
     ? DEFAULT_AVATAR
@@ -39,6 +42,11 @@ export function ClinicHeroCompact() {
               <h1 className="truncate font-[var(--font-sans)] text-xl font-semibold text-[#1F1A1C] sm:text-2xl">
                 {name}
               </h1>
+              {claimed === false && legalName ? (
+                <p className="mt-1 truncate font-[var(--font-sans)] text-[13px] text-[#6F5E64]">
+                  Nazwa rejestrowa: {legalName}
+                </p>
+              ) : null}
               <div className="mt-1 flex flex-wrap items-center gap-3 text-[14px] text-[#6F5E64]">
                 {profile.reviewCount > 0 ? (
                   <Link
@@ -47,14 +55,19 @@ export function ClinicHeroCompact() {
                   >
                     <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden />
                     <strong className="text-[#1F1A1C]">{profile.rating}</strong>
-                    <span>({profile.reviewCount} {profile.reviewCount === 1 ? "opinia" : profile.reviewCount < 5 ? "opinie" : "opinii"})</span>
+                    <span>
+                      (
+                      {profile.reviewCount}{" "}
+                      {profile.reviewCount === 1
+                        ? "opinia"
+                        : profile.reviewCount < 5
+                          ? "opinie"
+                          : "opinii"}
+                      )
+                    </span>
                   </Link>
                 ) : (
-                  <span className="inline-flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden />
-                    <strong className="text-[#1F1A1C]">{profile.rating}</strong>
-                    <span>({profile.reviewCount})</span>
-                  </span>
+                  <span className="text-[#6F5E64]">Brak opinii</span>
                 )}
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-4 w-4 shrink-0" aria-hidden />
@@ -64,13 +77,22 @@ export function ClinicHeroCompact() {
             </div>
           </div>
           <div className="shrink-0">
-            <button
-              type="button"
-              onClick={openContactModal}
-              className="inline-flex justify-center rounded-full bg-pink-500 px-6 py-3 font-[var(--font-sans)] text-[15px] font-medium text-white shadow-sm hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
-            >
-              {profile.ctaPrimary}
-            </button>
+            {claimed === false && clinicSlug ? (
+              <Link
+                href={clinicClaimPath(clinicSlug)}
+                className="inline-flex justify-center rounded-full bg-pink-500 px-6 py-3 font-[var(--font-sans)] text-[15px] font-medium text-white shadow-sm hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+              >
+                Przejmij profil
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={openContactModal}
+                className="inline-flex justify-center rounded-full bg-pink-500 px-6 py-3 font-[var(--font-sans)] text-[15px] font-medium text-white shadow-sm hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+              >
+                {profile.ctaPrimary}
+              </button>
+            )}
           </div>
         </div>
       </div>

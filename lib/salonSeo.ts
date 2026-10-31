@@ -22,6 +22,7 @@ const SALON_IT_EXACT_PATHS = new Set([
   "/informatyk-koszalin",
   "/monitoring-i-kamery-kolobrzeg",
   "/strony-internetowe",
+  "/zaamow",
   "/strona-internetowa-koszalin",
   "/strony-demo",
 ]);
@@ -74,6 +75,9 @@ export function getSalonSitemapBase(base: string, now: Date): MetadataRoute.Site
     { url: `${b}/portal/artykuly`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.85 },
     { url: `${b}/portal/faq`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${b}/portal/dla-gabinetow`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.72 },
+    { url: `${b}/portal/dla-salonow`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.78 },
+    { url: `${b}/przyklady-stron`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 },
+    { url: `${b}/strona-kosmetyczki`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.68 },
     { url: `${b}/kontakt`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${b}/polityka-prywatnosci`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.5 },
     { url: `${b}/polityka-cookies`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.5 },

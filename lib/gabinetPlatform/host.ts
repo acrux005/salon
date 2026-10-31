@@ -3,6 +3,7 @@ import {
   gabinetInternalPath,
   gabinetPublicHref,
   getGabinetLoginPublicPath,
+  isGabinetAppPath,
 } from "@/lib/gabinetPlatform/paths";
 
 /** Hosty z konfiguracji verticali (np. dentysta.odart.pl). */
@@ -28,7 +29,7 @@ export function getGabinetSiteUrl(host?: string): string {
 export function resolveGabinetAppPath(pathname: string, host: string): string {
   if (!isGabinetPortalHost(host)) return pathname;
   if (
-    pathname.startsWith("/gabinet") ||
+    isGabinetAppPath(pathname) ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/images") ||

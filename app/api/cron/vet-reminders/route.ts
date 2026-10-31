@@ -3,10 +3,9 @@ import { getPrisma } from "@/lib/db";
 import { sendVetOwnerReminderEmail } from "@/lib/email";
 import { sendVetSms } from "@/lib/vet/vetNotify";
 import { syncPreventionRemindersBatch, vetOwnerPanelPetUrl } from "@/lib/vet/preventionReminders";
+import { assertCronSecret } from "@/lib/cronSecret";
 
 export const dynamic = "force-dynamic";
-
-const CRON_SECRET = process.env.CRON_SECRET?.trim();
 
 async function dispatchReminder(row: {
   id: string;
@@ -70,9 +69,8 @@ async function dispatchReminder(row: {
 
 /** Wysyła zaplanowane przypomnienia SMS i e-mail; synchronizuje plan profilaktyki. */
 export async function GET(request: NextRequest) {
-  if (CRON_SECRET && request.nextUrl.searchParams.get("secret") !== CRON_SECRET) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = assertCronSecret(request);
+  if (denied) return denied;
 
   const synced = await syncPreventionRemindersBatch(50);
 

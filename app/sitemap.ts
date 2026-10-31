@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { getRestaurants } from "@/lib/restaurantDb";
 import { getAllClinicRecordsAsync } from "@/lib/skinmatch/clinics";
 import { getTreatmentSlugsForSitemapAsync } from "@/lib/skinmatch/treatmentsDb";
-import { isRafalKowalkowskiPlHost, ODART_SITE_URL } from "@/lib/odartSite";
+import { isOdartMainHost, isRafalKowalkowskiPlHost, ODART_SITE_URL } from "@/lib/odartSite";
 import { rafalKowalkowskiSitemapEntries } from "@/lib/rafalKowalkowskiSeo";
 import { ODART_ENGLISH_SERVICES } from "@/lib/odartEnglishServices";
 import { getSalonSitemapBase, SALON_SITE_URL } from "@/lib/salonSeo";
@@ -75,6 +75,24 @@ const odartMarketingEntries = (now: Date): MetadataRoute.Sitemap => [
     priority: 0.78,
   },
   {
+    url: `${ODART_BASE}/it-dla-hoteli/`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  },
+  {
+    url: `${ODART_BASE}/hotel/`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  },
+  {
+    url: `${ODART_BASE}/pogotowie-it/`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  },
+  {
     url: `${ODART_BASE}/informatyk-koszalin/`,
     lastModified: now,
     changeFrequency: "monthly" as const,
@@ -85,6 +103,12 @@ const odartMarketingEntries = (now: Date): MetadataRoute.Sitemap => [
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.78,
+  },
+  {
+    url: `${ODART_BASE}/zaamow/`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.92,
   },
   {
     url: `${ODART_BASE}/strony-internetowe/`,
@@ -160,6 +184,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const host = (await headers()).get("host") ?? "";
   if (isRafalKowalkowskiPlHost(host)) {
     return rafalKowalkowskiSitemapEntries(now);
+  }
+  if (isOdartMainHost(host)) {
+    return [
+      { url: `${ODART_BASE}/`, lastModified: now, changeFrequency: "daily" as const, priority: 1.0 },
+      { url: `${ODART_BASE}/o-mnie/`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.9 },
+      { url: `${ODART_BASE}/uslugi/`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.9 },
+      { url: `${ODART_BASE}/pozycjonowanie-seo/`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.75 },
+      ...odartMarketingEntries(now),
+    ];
   }
   if (isRandkiPortalHost(host)) {
     const base = getRandkiSiteUrl(host);

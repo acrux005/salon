@@ -15,6 +15,11 @@ export const RAFAL_SERVICE_IMAGE = {
   prezent: { src: `${ODART}/wp-content/uploads/prezent.jpg`, w: 800, h: 533 },
   tuning: { src: `${ODART}/wp-content/uploads/tuning.jpg`, w: 800, h: 533 },
   wokal: { src: `${ODART}/wp-content/uploads/nagraniewokalu.jpg`, w: 800, h: 533 },
+  gitara: {
+    src: `${ODART}/wp-content/uploads/2023/08/odart._A_guitarist_is_making_chords_by_looking_at_his_guitar__c43550c8-dc58-48f3-8ae8-20d37cc6374e_1.jpg`,
+    w: 400,
+    h: 400,
+  },
   meskaSesja: { src: `${ODART}/wp-content/uploads/meskasesja.jpg`, w: 800, h: 533 },
   przyjaciolka: { src: `${ODART}/wp-content/uploads/sesjazprzyjaciolka.jpg`, w: 800, h: 533 },
   plener: { src: `${ODART}/wp-content/uploads/2023/01/sesja-portretowa-w-plenerze.jpg`, w: 1200, h: 800 },

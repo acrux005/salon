@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/db";
+import { requirePortalClinicSession } from "@/lib/requireClinicApiSession";
 
 const CLINIC_BOOKING_PREFIX = "cb-";
 
@@ -7,6 +8,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requirePortalClinicSession();
+  if (!gate.ok) return gate.response;
+
   const { id } = await params;
   if (!id?.trim()) {
     return NextResponse.json({ error: "Brak id." }, { status: 400 });
@@ -31,6 +35,9 @@ export async function PATCH(
     });
     if (!existing) {
       return NextResponse.json({ error: "Nie znaleziono rezerwacji." }, { status: 404 });
+    }
+    if (!gate.session.admin && existing.clinicId !== gate.session.clinicId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const data: { status?: string; date?: string; time?: string; clientName?: string | null; clientPhone?: string | null; treatmentName?: string | null } = {};

@@ -18,7 +18,12 @@ export const ODART_BLOG_URL = `${ODART_SITE_URL}/blog/`;
 
 export function isOdartMainHost(host: string) {
   const h = host.split(":")[0]?.toLowerCase() ?? "";
-  return h === "odart.pl" || h === "www.odart.pl";
+  if (h === "odart.pl" || h === "www.odart.pl") return true;
+  return (
+    process.env.ODART_PREVIEW === "1" &&
+    process.env.NODE_ENV !== "production" &&
+    (h === "localhost" || h === "127.0.0.1")
+  );
 }
 
 /** Osobna witryna Next z sekcją Rafała (mirror treści z rafalkowalkowski.pl). */

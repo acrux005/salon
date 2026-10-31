@@ -21,11 +21,12 @@ export type RafalService = {
 
 const FILTERS: { slug: string; label: string }[] = [
   { slug: "*", label: "Wszystko" },
-  { slug: "informatyka", label: "Informatyka" },
-  { slug: "media", label: "Media społecznościowe" },
-  { slug: "strony", label: "Strony internetowe" },
-  { slug: "nagrania", label: "Nagrania" },
+  { slug: "lekcje", label: "Lekcje" },
   { slug: "foto", label: "Sesje fotograficzne" },
+  { slug: "nagrania", label: "Nagrania" },
+  { slug: "strony", label: "Strony internetowe" },
+  { slug: "media", label: "Media społecznościowe" },
+  { slug: "informatyka", label: "Informatyka" },
 ];
 
 type Props = { items: RafalService[]; /** Filtr z URL legacy (np. product-category/informatyka). */ initialCategory?: string };

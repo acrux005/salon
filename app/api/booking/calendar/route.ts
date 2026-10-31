@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/db";
+import { requirePortalClinicSession } from "@/lib/requireClinicApiSession";
 
 /** Format rezerwacji z Next (ClinicBooking) — id jako "cb-"+cuid. */
 function clinicBookingToAppointment(b: {
@@ -23,6 +24,9 @@ function clinicBookingToAppointment(b: {
 }
 
 export async function GET(request: NextRequest) {
+  const gate = await requirePortalClinicSession();
+  if (!gate.ok) return gate.response;
+
   const month = request.nextUrl.searchParams.get("month")?.trim() || new Date().toISOString().slice(0, 7);
   const staffIdParam = request.nextUrl.searchParams.get("staff_id")?.trim();
   const clinicSlug = request.nextUrl.searchParams.get("clinic_slug")?.trim();
@@ -36,14 +40,16 @@ export async function GET(request: NextRequest) {
   const lastDay = new Date(year, monthNum, 0);
   const lastDayStr = `${year}-${String(monthNum).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
 
-  let clinicId: string | null = null;
-  if (clinicSlug) {
+  let clinicId: string | null = gate.session.admin ? null : gate.session.clinicId;
+  if (gate.session.admin && clinicSlug) {
     const prisma = getPrisma();
     const clinic = await prisma.clinic.findFirst({
       where: { slug: clinicSlug },
       select: { id: true },
     });
     if (clinic) clinicId = clinic.id;
+  } else if (!gate.session.admin) {
+    clinicId = gate.session.clinicId;
   }
 
   const appointments: Record<string, unknown[]> = {};

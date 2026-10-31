@@ -14,9 +14,11 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Strony internetowe Kołobrzeg | ODART — Rafał Kowalkowski",
+    title: {
+      absolute: "Strony internetowe Kołobrzeg od 1200 zł | ODART",
+    },
     description:
-      "Strony WWW, które zdobywają klientów: UX, SEO, pakiety od 1200 zł, WordPress i Next.js. Kołobrzeg i zdalnie.",
+      "Strony dla firm z Kołobrzegu i okolic. Wizytówka od 1200 zł, strona firmowa od 2500 zł. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
     keywords: [
       "strona WordPress",
       "budowa strony WWW",
@@ -25,9 +27,9 @@ export async function generateMetadata(): Promise<Metadata> {
     ],
     alternates: { canonical: CANONICAL_PREFERRED },
     openGraph: {
-      title: "Strony internetowe | ODART",
+      title: "Strony internetowe Kołobrzeg od 1200 zł | ODART",
       description:
-        "Projektuję i buduję nowoczesne strony dla firm — od wizytówki po sklep. Zapytaj o wycenę.",
+        "Strony dla firm z Kołobrzegu i okolic. Wizytówka od 1200 zł, strona firmowa od 2500 zł. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
       url: CANONICAL_PREFERRED,
       locale: "pl_PL",
       type: "website",

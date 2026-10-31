@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runDueGabClientMessageSchedules } from "@/lib/gabinet/clientMessageSchedules";
+import { assertCronSecret } from "@/lib/cronSecret";
 
 export const dynamic = "force-dynamic";
 
-const CRON_SECRET = process.env.CRON_SECRET?.trim();
-
 /** Wysyła wiadomości cykliczne i jednorazowe do klientów gabinetu. */
 export async function GET(request: NextRequest) {
-  if (CRON_SECRET && request.nextUrl.searchParams.get("secret") !== CRON_SECRET) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = assertCronSecret(request);
+  if (denied) return denied;
 
   const result = await runDueGabClientMessageSchedules(10);
   return NextResponse.json({ ok: true, ...result });

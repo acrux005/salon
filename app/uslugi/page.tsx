@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Usługi | Strony internetowe, WordPress, SEO — ODART Kołobrzeg",
     description:
-      "Tworzenie stron WWW, migracje WordPress, przywracanie po infekcji, wycena, SEO, social media. Ostry Dyżur Artystyczny — Kołobrzeg i online.",
+      "Tworzenie stron WWW, domeny i poczta na zaamow.pl, migracje WordPress, SEO, social media i opieka IT. ODART — Kołobrzeg i online.",
     alternates: { canonical: CANONICAL },
     openGraph: {
       title: "Usługi internetowe | ODART",

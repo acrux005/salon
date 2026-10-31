@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const IMG = {
-  model: "https://salon.odart.pl/wp-content/uploads/2026/02/womanbeautyy.jpg",
+  model: "/womanbeautyy.jpg",
 };
 
 export default function HeroBeautyEditorial() {

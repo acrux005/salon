@@ -98,9 +98,9 @@ export function OdartRafalKowalkowskiLanding() {
               <section id="home" className="scroll-mt-28">
                 <MainTitle
                   heading="h1"
-                  subtitle="Wstęp"
-                  title="Fotografia, dźwięk i technologia"
-                  desc="Projektuję i realizuję usługi dla klientów indywidualnych i firm: nowoczesne strony, nagrania, teledyski, sesje zdjęciowe oraz spokojną administrację IT."
+                  subtitle="Kołobrzeg"
+                  title="Lekcje gitary, zajęcia wokalne i fotografia"
+                  desc="Uczę gry na gitarze i śpiewu — indywidualnie, także online. Robię sesje portretowe i nagrania wokalu w Kołobrzegu."
                 />
                 <div className="mt-8 border-t border-white/10 pt-8 italic text-neutral-500">
                   „Człowiek bez pasji żyje tylko jednym życiem”
@@ -111,7 +111,7 @@ export function OdartRafalKowalkowskiLanding() {
                 <MainTitle
                   subtitle="O mnie"
                   title="Biografia"
-                  desc="Od 2005 roku pasjonuję się fotografią; pasja przerodziła się w Fotoferię i dalszą drogę programistyczną. Łączę kadr, dźwięk i kod — ACRUX to marka studyjna, ODART to zespół i infrastruktura."
+                  desc="Od 2005 roku fotografuję; uczę też gitary i śpiewu. Studio ACRUX to nagrania i sesje, Kołobrzeg to miejsce lekcji i zdjęć."
                 />
                 <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-start">
                   <div className="overflow-hidden rounded-xl border border-white/[0.08]">
@@ -206,8 +206,8 @@ export function OdartRafalKowalkowskiLanding() {
               <section id="services" className="scroll-mt-28 border-t border-white/10 pt-20">
                 <MainTitle
                   subtitle="Usługi"
-                  title="Co robię"
-                  desc="Świadomość marki, ruch w sieci i spójna komunikacja wizualna — od sesji po wdrożenia i utrzymanie."
+                  title="Gitara, wokal, zdjęcia"
+                  desc="Lekcje indywidualne, nagranie wokalu i sesje fotograficzne — od pierwszej lekcji po gotowe zdjęcia i plik audio."
                 />
                 <ul className="divide-y divide-white/[0.08] rounded-xl border border-white/[0.08] bg-white/[0.02]">
                   {SERVICES.slice(0, 6).map((s) => (
@@ -279,9 +279,9 @@ export function OdartRafalKowalkowskiLanding() {
                 <MainTitle subtitle="Blog i aktualności" title="Ostatnie wpisy" desc="Pełny blog na stronie autorskiej — kilka propozycji lektury." />
                 <ul className="grid gap-6 sm:grid-cols-2">
                   {[
-                    { title: "Teledyski i produkcja w regionie", hint: "Filmowanie Zachodniopomorskie" },
-                    { title: "Muzyka autorska i studio", hint: "ACRUX" },
-                    { title: "Za kulisami sesji", hint: "Galeria" },
+                    { title: "Nauka gry na gitarze w Kołobrzegu", hint: "Lekcje gitary" },
+                    { title: "Zajęcia wokalne i nagranie wokalu", hint: "Nauka śpiewu" },
+                    { title: "Kompozycja i sesje fotograficzne", hint: "Fotografia" },
                   ].map((post) => (
                     <li key={post.title}>
                       <a

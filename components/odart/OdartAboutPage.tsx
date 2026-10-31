@@ -115,12 +115,12 @@ export function OdartAboutPage() {
         <div className="relative mx-auto max-w-6xl px-4 py-16 lg:py-20 lg:px-6">
           <div className="flex items-center gap-2 text-odart-accent">
             <Sparkles className="h-6 w-6" aria-hidden />
-            <span className="text-sm font-medium uppercase tracking-wide">Usługi internetowe</span>
+            <span className="text-sm font-medium uppercase tracking-wide">Kołobrzeg · od 2008</span>
           </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">O mnie</h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
-            Projektuję i wdrażam aplikacje webowe oraz rozbudowane serwisy — od UX i architektury po kod produkcyjny,
-            integracje i utrzymanie.
+            Rafał Kowalkowski. Robię strony i aplikacje. Fotoferia od 2008, potem panele, sklepy, zamówienia. Jeden
+            kontakt — nie software house.
           </p>
           <div className="mt-10 flex flex-wrap items-end gap-8">
             <div>
@@ -235,26 +235,14 @@ export function OdartAboutPage() {
           <div>
             <h2 className="text-3xl font-bold text-white sm:text-4xl">ODART — Ostry Dyżur Artystyczny</h2>
             <p className="mt-6 text-neutral-400 leading-relaxed">
-              Pasjonuję się technologiami internetowymi; od lat specjalizuję się w WordPressie. Projekty łączą nowoczesny
-              design, intuicyjne UX i wydajność. Wspieram klientów od planu i projektu po wdrożenie.
+              Tak się to nazywa od początku. Robię strony, panele i aplikacje. WordPress, gdy ktoś ma sam edytować
+              treści. Next.js, gdy to ma działać jak produkt, nie jak ulotka.
             </p>
-            <div className="mt-10 space-y-6">
-              {[
-                { label: "Software development", v: 87 },
-                { label: "Web development", v: 94 },
-                { label: "UI / UX design", v: 83 },
-              ].map((row) => (
-                <div key={row.label}>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-neutral-300">{row.label}</span>
-                    <span className="text-odart-accent">{row.v}%</span>
-                  </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-neutral-800">
-                    <div className="h-full rounded-full bg-odart-accent" style={{ width: `${row.v}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ul className="mt-10 space-y-3 text-sm text-neutral-300">
+              <li>Fotoferia — od 2008</li>
+              <li>Zamówienia online, panele, harmonogramy</li>
+              <li>Kołobrzeg, reszta Polski zdalnie</li>
+            </ul>
           </div>
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-8 lg:mt-0">
             <p className="text-lg font-semibold text-white">Rafał Kowalkowski</p>

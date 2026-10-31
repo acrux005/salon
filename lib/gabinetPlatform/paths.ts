@@ -1,8 +1,13 @@
 import { isGabinetPortalHost } from "@/lib/gabinetPlatform/host";
 
+/** Prefiks aplikacji — `/gabinet` i `/gabinet/...`, ale nie `/gabinety`. */
+export function isGabinetAppPath(pathname: string): boolean {
+  return pathname === "/gabinet" || pathname.startsWith("/gabinet/");
+}
+
 /** Ścieżka wewnętrzna aplikacji (/gabinet/...) niezależnie od publicznego URL. */
 export function gabinetInternalPath(pathname: string): string {
-  if (pathname.startsWith("/gabinet")) return pathname;
+  if (isGabinetAppPath(pathname)) return pathname;
   if (pathname === "/") return "/gabinet";
   return `/gabinet${pathname}`;
 }
@@ -16,7 +21,7 @@ export function gabinetPublicHref(path: string, hostOrIsPortal?: string | boolea
         ? isGabinetPortalHost(hostOrIsPortal)
         : false;
   const p = path.startsWith("/") ? path : `/${path}`;
-  const internal = p.startsWith("/gabinet") ? p : `/gabinet${p === "/" ? "" : p}`;
+  const internal = isGabinetAppPath(p) ? p : `/gabinet${p === "/" ? "" : p}`;
   if (!isPortal) return internal;
   if (internal === "/gabinet") return "/";
   return internal.slice(8) || "/";
@@ -27,7 +32,7 @@ export function getGabinetLoginPublicPath(host: string): string {
 }
 
 export function isGabinetMarketingOrAuthPath(internalPath: string): boolean {
-  if (!internalPath.startsWith("/gabinet")) return false;
+  if (!isGabinetAppPath(internalPath)) return false;
   if (internalPath.startsWith("/gabinet/panel")) return false;
   if (internalPath.startsWith("/gabinet/klient/panel")) return false;
   return true;
@@ -44,7 +49,7 @@ export function resolveGabinetLoginCallback(
   let internal = callbackUrl;
   if (callbackUrl.startsWith("/panel") || callbackUrl.startsWith("/klient")) {
     internal = `/gabinet${callbackUrl}`;
-  } else if (!callbackUrl.startsWith("/gabinet")) {
+  } else if (!isGabinetAppPath(callbackUrl)) {
     return fallback;
   }
 

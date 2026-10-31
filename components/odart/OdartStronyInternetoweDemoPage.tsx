@@ -31,13 +31,19 @@ function canonicalUrl(pathname: string): string {
   return `${base}${p.endsWith("/") ? p : `${p}/`}`;
 }
 
+const localExamples = [
+  { cat: "Restauracja", title: "Smaczna Ryba", href: "https://smacznaryba.pl/" },
+  { cat: "Gabinet", title: "Beauty Room", href: "https://roombeauty.pl/" },
+  { cat: "Sklep", title: "Kos-Mos", href: "https://kos-mos.pl/" },
+];
+
 const portfolioItems = [
   { cat: "Sklep", title: "Smaczna Ryba", href: "https://smacznaryba.pl/" },
   { cat: "Deweloper", title: "Platforma sprzedaży mieszkań", href: `${SITE}/project/strona-dla-dewelopera/` },
   { cat: "Kancelaria", title: "Biuro Rachunkowe MKProfit", href: "https://mkprofit.com.pl/" },
-  { cat: "Aplikacje", title: "ProKursy-Online", href: "https://prokursy-online.pl/" },
-  { cat: "Aplikacje", title: "Aplikacja hotelowa (HotelOps)", href: "https://hotel.odart.pl/" },
-  { cat: "Aplikacje", title: "Portal fotograficzny Fotoferia", href: "https://fotoferia.pl/" },
+  { cat: "Szkolenia", title: "ProKursy-Online", href: "https://prokursy-online.pl/" },
+  { cat: "Hotel", title: "HotelOps", href: "/hotel/" },
+  { cat: "Portal", title: "Fotoferia", href: "https://fotoferia.pl/" },
 ];
 
 const testimonials = [
@@ -60,8 +66,8 @@ const testimonials = [
 
 const packages = [
   {
-    name: "Start",
-    subtitle: "Dla małych firm i osób prywatnych",
+    name: "Wizytówka",
+    subtitle: "Mała firma, gabinet, jednoosobowa działalność",
     price: "od 1200 zł",
     features: [
       "Strona wizytówka (do 5 podstron)",
@@ -106,12 +112,15 @@ export function OdartStronyInternetoweDemoPage({
   localSeo,
 }: Props) {
   const CANONICAL = canonicalUrl(jsonLdCanonicalPathname);
+  const pageH1 = localSeo
+    ? `Strony internetowe w ${localSeo.cityLocative}`
+    : "Strony internetowe w Kołobrzegu";
   const webPageName = localSeo
-    ? `Strony internetowe ${localSeo.city} | ODART — Rafał Kowalkowski`
-    : "Strony internetowe Kołobrzeg | ODART — Rafał Kowalkowski";
+    ? `Strony internetowe ${localSeo.city} | ODART`
+    : "Strony internetowe Kołobrzeg od 1200 zł | ODART";
   const webPageDescription = localSeo
-    ? `Strony WWW dla firm w ${localSeo.cityLocative} — struktura, UX, SEO, wdrożenie WordPress / Next.js.`
-    : "Nowoczesne strony dla firm i usług lokalnych — struktura, UX, SEO, wdrożenie WordPress / Next.js.";
+    ? `Strony WWW dla firm w ${localSeo.cityLocative}. Wizytówka od 1200 zł, strona firmowa od 2500 zł.`
+    : "Strony dla firm z Kołobrzegu i okolic. Wizytówka od 1200 zł, strona firmowa od 2500 zł. Rafał Kowalkowski, od 2008. Tel. 695 432 415.";
   const serviceAreaServed = localSeo
     ? [
         { "@type": "City" as const, name: localSeo.city },
@@ -133,10 +142,26 @@ export function OdartStronyInternetoweDemoPage({
       {
         "@type": "Service",
         "@id": `${CANONICAL}#service`,
-        name: "Tworzenie stron internetowych",
-        serviceType: "Projektowanie i wdrożenie stron WWW",
+        name: pageH1,
+        serviceType: "Tworzenie stron internetowych",
         provider: { "@id": `${SITE}/#org` },
         areaServed: serviceAreaServed,
+        offers: [
+          {
+            "@type": "Offer",
+            name: "Wizytówka",
+            price: "1200",
+            priceCurrency: "PLN",
+            priceSpecification: { "@type": "PriceSpecification", minPrice: "1200", priceCurrency: "PLN" },
+          },
+          {
+            "@type": "Offer",
+            name: "Firma",
+            price: "2500",
+            priceCurrency: "PLN",
+            priceSpecification: { "@type": "PriceSpecification", minPrice: "2500", priceCurrency: "PLN" },
+          },
+        ],
       },
       {
         "@type": "Organization",
@@ -162,11 +187,33 @@ export function OdartStronyInternetoweDemoPage({
             ODART — Rafał Kowalkowski
           </p>
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-[3.25rem] lg:leading-tight">
-            Tworzę strony internetowe, które zdobywają klientów
+            {pageH1}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Projektuję i buduję nowoczesne strony dla firm, specjalistów i usług lokalnych. Strona ma pracować — zbierać
-            zapytania, pokazywać ofertę i budować zaufanie. Od prostej wizytówki po rozbudowaną sprzedaż online.
+          <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-white">
+            Wizytówka od 1200 zł · strona firmowa od 2500 zł
+          </p>
+          <p className="mt-3">
+            <a href="tel:+48695432415" className="text-lg font-semibold text-odart-accent hover:text-orange-300">
+              695 432 415
+            </a>
+          </p>
+          <div className="mx-auto mt-8 grid max-w-3xl gap-3 text-left sm:grid-cols-3">
+            {localExamples.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+              >
+                <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">{item.cat}</span>
+                <span className="mt-1 block text-sm font-semibold text-white">{item.title}</span>
+              </a>
+            ))}
+          </div>
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-neutral-400">
+            Wizytówka, strona usługowa albo sklep. Układ pod ofertę, formularz, podstawowe SEO. WordPress, gdy chcesz
+            sam zmieniać treści.
           </p>
           {localSeo && (
             <p className="mx-auto mt-4 max-w-2xl text-sm text-neutral-500">
@@ -196,17 +243,13 @@ export function OdartStronyInternetoweDemoPage({
       <section className="border-b border-white/10 px-4 py-16 lg:px-6">
         <div className="mx-auto max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-wide text-odart-accent">O mnie</p>
-          <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">Ponad 10 lat doświadczenia</h2>
+          <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">Robię to od 2008</h2>
           <p className="mt-6 text-lg leading-relaxed text-neutral-400">
-            Projektuję i tworzę strony internetowe dla firm i osób prywatnych — od prostych wizytówek po rozbudowane
-            serwisy i platformy online. Każdy projekt powstaje tak, aby był czytelny, szybki i skuteczny sprzedażowo.
-          </p>
-          <p className="mt-4 text-neutral-400 leading-relaxed">
-            Łączę design z funkcjonalnością: najpierw analiza potrzeb, potem struktura i UX, a na końcu wdrożenie
-            technologiczne (WordPress, PHP, HTML/CSS lub aplikacje Next.js).
+            Najpierw rozmawiamy, po co ta strona. Potem układ, teksty, wdrożenie. WordPress, PHP albo Next.js — zależnie
+            od tego, kto ma później wchodzić w panel.
           </p>
           <p className="mt-4 font-medium text-neutral-300">
-            Strona ma nie tylko wyglądać — ma działać, zbierać zapytania i być widoczna w Google.
+            Ma być szybka, czytelna na telefonie i mieć miejsce, gdzie ktoś zostawi wiadomość.
           </p>
         </div>
       </section>
@@ -215,9 +258,9 @@ export function OdartStronyInternetoweDemoPage({
         <div className="mx-auto max-w-3xl">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">Z czym zgłaszają się klienci</h2>
           <p className="mt-6 text-neutral-400 leading-relaxed">
-            Strona wygląda dobrze, ale nie ma zapytań. Formularz niby działa, ale nikt nie pisze. W Google Cię nie widać.
-            Strona ładuje się wolno albo źle działa na telefonie. Trzeba zmienić treści, a Ty nie wiesz jak to edytować.
-            <span className="text-neutral-300"> To nie jest problem wyglądu — tylko działania strony.</span>
+            Strona jest, a telefon milczy. Formularz jest, nikt nie pisze. W Google Cię nie ma. Na telefonie rozjeżdża
+            się layout. Żeby zmienić godzinę otwarcia, trzeba dzwonić do „pana od stron”.
+            <span className="text-neutral-300"> Tym się zajmuję.</span>
           </p>
         </div>
       </section>
@@ -226,15 +269,14 @@ export function OdartStronyInternetoweDemoPage({
         <div className="mx-auto max-w-3xl">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">Jak wygląda współpraca</h2>
           <p className="mt-6 text-neutral-400 leading-relaxed">
-            Najpierw poznaję Twoją ofertę i klienta. Potem projektuję strukturę, która prowadzi użytkownika do kontaktu.
-            Buduję stronę tak, żeby była szybka, czytelna i łatwa w obsłudze. Na końcu konfiguruję SEO, formularze i
-            pomiar zapytań. Strona zaczyna pracować — zamiast tylko istnieć.
+            Opisujesz ofertę. Układam stronę tak, żeby dało się z niej napisać albo zadzwonić. Wdrażam, ustawiam
+            formularz i podstawowe SEO. Dostajesz panel albo ustalamy, że zmiany idą przeze mnie.
           </p>
           <ul className="mt-8 space-y-3">
             {[
-              "Strona zbiera zapytania zamiast leżeć.",
-              "Szybka i czytelna na każdym urządzeniu.",
-              "Widoczna w Google i łatwa w edycji.",
+              "Formularz i telefon na wierzchu.",
+              "Działa na telefonie, nie tylko na desktopie.",
+              "Da się zmienić treść bez zgadywania.",
             ].map((t) => (
               <li key={t} className="flex gap-3 text-neutral-300">
                 <Check className="mt-0.5 h-5 w-5 shrink-0 text-odart-accent" aria-hidden />
@@ -251,8 +293,8 @@ export function OdartStronyInternetoweDemoPage({
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-8">
               <Sparkles className="h-10 w-10 text-odart-accent" aria-hidden />
-              <h3 className="mt-6 text-xl font-bold text-white">Strona, która naprawdę działa</h3>
-              <p className="mt-2 text-sm text-neutral-500">Nie tylko projekt graficzny — tworzę narzędzie do zdobywania klientów.</p>
+              <h3 className="mt-6 text-xl font-bold text-white">Strona, z której ktoś napisze</h3>
+              <p className="mt-2 text-sm text-neutral-500">Nie sam wygląd. Oferta, kontakt, szybkość.</p>
               <ul className="mt-6 space-y-2 text-sm text-neutral-400">
                 {["Struktura dopasowana do branży", "Formularze i zapytania trafiają do Ciebie", "Strona szybka i responsywna", "Gotowa pod pozycjonowanie (SEO)", "Integracje z mapą, social media i analytics"].map((x) => (
                   <li key={x} className="flex gap-2">
@@ -321,8 +363,10 @@ export function OdartStronyInternetoweDemoPage({
 
       <section className="border-b border-white/10 px-4 py-16 lg:px-6">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Pakiety tworzenia stron internetowych</h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-neutral-400">Wybierz pakiet dopasowany do Twoich potrzeb</p>
+          <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">Jak to zwykle wygląda</h2>
+          <p className="mx-auto mt-4 max-w-xl text-center text-neutral-400">
+            Trzy typowe zakresy. Kwotę mówię po rozmowie, nie z tabelki.
+          </p>
           <div className="mt-12 grid gap-8 lg:grid-cols-3">
             {packages.map((pkg) => (
               <article
@@ -335,7 +379,7 @@ export function OdartStronyInternetoweDemoPage({
               >
                 <h3 className="text-xl font-bold text-white">{pkg.name}</h3>
                 <p className="mt-1 text-sm text-neutral-500">{pkg.subtitle}</p>
-                <p className="mt-6 text-2xl font-bold text-odart-accent">{pkg.price}</p>
+                <p className="mt-4 text-2xl font-bold text-odart-accent">{pkg.price}</p>
                 <ul className="mt-6 flex-1 space-y-3 text-sm text-neutral-400">
                   {pkg.features.map((f) => (
                     <li key={f} className="flex gap-2">
@@ -350,10 +394,45 @@ export function OdartStronyInternetoweDemoPage({
                     pkg.highlight ? "bg-odart-accent text-white hover:brightness-110" : "border border-white/15 text-white hover:bg-white/5"
                   }`}
                 >
-                  Zapytaj o wycenę
+                  Napisz o takim zakresie
                 </Link>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-white/10 bg-neutral-950/40 px-4 py-16 lg:px-6">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">Zamówienia i panele gabinetów</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-neutral-400">
+            Oprócz stron WWW utrzymuję też gotowe systemy, z których korzystają lokale i gabinety.
+          </p>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <a
+              href="https://zamow.odart.pl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-odart-accent/40"
+            >
+              <p className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Zamówienia</p>
+              <h3 className="mt-2 text-lg font-semibold text-white">zamow.odart.pl</h3>
+              <p className="mt-3 text-sm leading-relaxed text-neutral-400">
+                Menu, koszyk, odbiór albo dostawa, panel restauracji.
+              </p>
+            </a>
+            <a
+              href="https://salon.odart.pl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-odart-accent/40"
+            >
+              <p className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Gabinety</p>
+              <h3 className="mt-2 text-lg font-semibold text-white">salon.odart.pl</h3>
+              <p className="mt-3 text-sm leading-relaxed text-neutral-400">
+                Kalendarz, rezerwacje i kartoteki dla gabinetów i salonów.
+              </p>
+            </a>
           </div>
         </div>
       </section>

@@ -11,19 +11,30 @@ function internalPathFromOdartHref(odartHref: string): string {
   }
 }
 
+function productTitle(offer: RafalProductOffer): string {
+  if (offer.slug === "wokal") {
+    return "Nagranie wokalu Kołobrzeg — śpiew z podkładem | Rafał Kowalkowski";
+  }
+  if (offer.slug === "podklad" || offer.title.toLowerCase().includes("podkładem")) {
+    return "Nagranie piosenki z podkładem — Kołobrzeg | Rafał Kowalkowski";
+  }
+  return `${offer.title} — Rafał Kowalkowski`;
+}
+
 export async function rafalProductMetadata(offer: RafalProductOffer): Promise<Metadata> {
   const canonical = await canonicalForRafalSection(internalPathFromOdartHref(offer.odartHref));
+  const title = productTitle(offer);
   return {
-    title: { absolute: `${offer.title} — Rafał Kowalkowski | ODART` },
+    title: { absolute: title },
     description: offer.jsonLdDescription,
     alternates: { canonical },
     openGraph: {
-      title: `${offer.title} | ODART`,
+      title,
       description: offer.jsonLdDescription,
       url: canonical,
       locale: "pl_PL",
       type: "website",
-      siteName: "ODART",
+      siteName: "Rafał Kowalkowski",
       images: [
         {
           url: offer.hero.src,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/db";
 import { normalizeVisitType } from "@/lib/vet/visitTypes";
 import { isValidVisitStatus } from "@/lib/vet/visitStatus";
+import { requireVetClinicSession } from "@/lib/requireClinicApiSession";
 
 const PREFIX = "va-";
 
@@ -9,6 +10,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireVetClinicSession();
+  if (!gate.ok) return gate.response;
+
   const { id } = await params;
   if (!id?.startsWith(PREFIX)) {
     return NextResponse.json({ error: "Nieznany typ wizyty." }, { status: 404 });
@@ -53,6 +57,9 @@ export async function PATCH(
     });
     if (!existing) {
       return NextResponse.json({ error: "Nie znaleziono wizyty." }, { status: 404 });
+    }
+    if (!gate.session.admin && existing.vetClinicId !== gate.session.vetClinicId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const data: {

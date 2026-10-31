@@ -1,68 +1,138 @@
 "use client";
 
+import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Check } from "lucide-react";
-import { usePortalQuiz } from "./PortalQuizContext";
-import { PORTAL_LOCALE } from "@/content/portalLocale";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
+import { PORTAL_SEO_CITIES } from "@/content/portalCities";
 
-/** Zdjęcie z /public (np. /zabiegihero.jpg) albo pełny URL. */
 const HERO_SRC =
   process.env.NEXT_PUBLIC_PORTAL_HERO_IMAGE?.trim() || "/zabiegihero.jpg";
 
-const TRUST = [
-  "Rekomendacje w oparciu o praktykę gabinetów",
-  "1–3 dopasowane propozycje, bez spamu",
-  `Działamy w ${PORTAL_LOCALE.regionIn}`,
-];
+function normalize(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/ą/g, "a")
+    .replace(/ć/g, "c")
+    .replace(/ę/g, "e")
+    .replace(/ł/g, "l")
+    .replace(/ń/g, "n")
+    .replace(/ó/g, "o")
+    .replace(/ś/g, "s")
+    .replace(/ź|ż/g, "z")
+    .trim();
+}
 
 export function HeroPortal() {
-  const { openModal } = usePortalQuiz();
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [city, setCity] = useState("");
+
+  const citySuggestions = useMemo(() => {
+    const q = normalize(city);
+    if (q.length < 2) return [];
+    return PORTAL_SEO_CITIES.filter(
+      (c) => normalize(c.name).includes(q) || c.slug.includes(q)
+    ).slice(0, 6);
+  }, [city]);
+
+  function resolveCitySlug(input: string): string | null {
+    const q = normalize(input);
+    if (!q) return null;
+    const exact = PORTAL_SEO_CITIES.find((c) => normalize(c.name) === q || c.slug === q);
+    if (exact) return exact.slug;
+    const partial = PORTAL_SEO_CITIES.find(
+      (c) => normalize(c.name).startsWith(q) || c.slug.startsWith(q)
+    );
+    return partial?.slug ?? null;
+  }
+
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    const q = query.trim();
+    const citySlug = resolveCitySlug(city);
+    if (citySlug) {
+      const params = q ? `?q=${encodeURIComponent(q)}` : "";
+      router.push(`/portal/gabinety/${citySlug}${params}`);
+      return;
+    }
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (city.trim()) params.set("city", city.trim());
+    const qs = params.toString();
+    router.push(qs ? `/portal/gabinety?${qs}` : "/portal/gabinety");
+  }
 
   return (
     <section
-      id="rozpocznij"
-      className="border-b border-neutral-200/40 py-20 lg:py-28"
+      id="szukaj"
+      className="border-b border-neutral-200/40 py-16 lg:py-24"
       style={{ background: "linear-gradient(to bottom, #ffffff 0%, #fef9fb 50%, #fafafa 100%)" }}
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
           <div>
             <h1 className="font-[var(--font-serif)] text-3xl font-normal leading-tight text-[#1F1A1C] sm:text-4xl lg:text-[2.75rem]">
-              Dobierz idealny zabieg lub gabinet w {PORTAL_LOCALE.regionIn} — w 2 minuty.
+              Znajdź salon i usługi beauty w swojej okolicy
             </h1>
             <p className="mt-5 max-w-lg font-[var(--font-sans)] text-[16px] leading-relaxed text-[#6F5E64]">
-              Odpowiedz na kilka pytań albo przeglądaj usługi. Paznokcie, brwi, masaże, twarz i więcej — sprawdzone miejsca w {PORTAL_LOCALE.regionLong}.
+              Gabinety kosmetyczne, fryzjerstwo, paznokcie, brwi i masaże. Wyszukaj salon w swoim
+              mieście i poznaj jego profil.
             </p>
-            <div className="mt-12 flex flex-wrap items-center gap-4">
-              <button
-                type="button"
-                onClick={openModal}
-                className="inline-flex items-center gap-2 rounded-full bg-pink-500 px-6 py-3.5 font-[var(--font-sans)] text-[15px] font-medium text-white shadow-md transition-all hover:bg-pink-600"
-              >
-                Analiza skóry
-              </button>
-              <Link
-                href="/portal/gabinety"
-                className="inline-flex items-center rounded-full border border-neutral-300 px-5 py-3 font-[var(--font-sans)] text-[14px] font-medium text-[#1F1A1C] transition-colors hover:border-pink-300 hover:bg-pink-50/50"
-              >
-                Wybierz gabinet
+
+            <form onSubmit={onSubmit} className="mt-8 space-y-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <label className="relative min-w-0 flex-1">
+                  <span className="sr-only">Salon lub usługa</span>
+                  <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6F5E64]" />
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Salon lub usługa"
+                    className="h-12 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-4 text-[14px] text-[#1F1A1C] outline-none focus:border-pink-300 focus:ring-2 focus:ring-pink-100"
+                  />
+                </label>
+                <label className="relative w-full sm:w-44">
+                  <span className="sr-only">Miasto</span>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Miasto"
+                    list="portal-hero-cities"
+                    className="h-12 w-full rounded-xl border border-neutral-200 bg-white px-4 text-[14px] text-[#1F1A1C] outline-none focus:border-pink-300 focus:ring-2 focus:ring-pink-100"
+                    autoComplete="address-level2"
+                  />
+                  <datalist id="portal-hero-cities">
+                    {citySuggestions.map((c) => (
+                      <option key={c.slug} value={c.name} />
+                    ))}
+                  </datalist>
+                </label>
+                <button
+                  type="submit"
+                  className="h-12 shrink-0 rounded-xl bg-pink-500 px-6 font-[var(--font-sans)] text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-pink-600"
+                >
+                  Szukaj
+                </button>
+              </div>
+            </form>
+
+            <p className="mt-5 font-[var(--font-sans)] text-[14px] text-[#4a3f42]">
+              <strong className="font-semibold text-[#1F1A1C]">Prowadzisz salon?</strong>{" "}
+              <Link href="/portal/dodaj-salon" className="font-medium text-pink-600 hover:underline">
+                Dodaj lub przejmij bezpłatny profil →
               </Link>
-            </div>
-            <ul className="mt-8 flex flex-col gap-2">
-              {TRUST.map((text) => (
-                <li key={text} className="flex items-center gap-2 font-[var(--font-sans)] text-[13px] text-neutral-500">
-                  <Check className="h-4 w-4 shrink-0 text-pink-400" />
-                  {text}
-                </li>
-              ))}
-            </ul>
+            </p>
           </div>
+
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 shadow-lg lg:max-w-none">
               <Image
                 src={HERO_SRC}
-                alt={`Zabiegi — dobierz idealny zabieg lub gabinet w ${PORTAL_LOCALE.regionIn}`}
+                alt="Salon beauty — znajdź gabinet i usługi w swojej okolicy"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"

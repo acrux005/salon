@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  AlertTriangle,
   ChevronRight,
   Network,
   Router,
@@ -24,16 +25,16 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${CANONICAL}#webpage`,
       url: CANONICAL,
-      name: "Usługi informatyczne Kołobrzeg | ODART",
+      name: "Informatyk Kołobrzeg — sieci, ERP, opieka IT | ODART",
       description:
-        "Projektowanie sieci, konfiguracja sprzętu, zabezpieczenia, ERP Comarch Optima i Enova, backup w chmurze, audyt IT.",
+        "IT dla firm z Kołobrzegu: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
       isPartOf: { "@id": `${SITE}/#website` },
       inLanguage: "pl-PL",
     },
     {
       "@type": "ProfessionalService",
       "@id": `${CANONICAL}#service`,
-      name: "Usługi informatyczne Kołobrzeg — ODART",
+      name: "Informatyk Kołobrzeg — ODART",
       url: CANONICAL,
       telephone: "+48695432415",
       email: "biuro@odart.pl",
@@ -61,28 +62,81 @@ export function OdartInformatykKolobrzegPage() {
       <section className="border-b border-white/10 bg-gradient-to-b from-neutral-950/40 to-black px-4 py-16 lg:px-6 lg:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="text-sm font-medium uppercase tracking-wide text-odart-accent">
-            Kompleksowe wsparcie IT dla firm i klientów indywidualnych
+            ODART — Rafał Kowalkowski
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Usługi informatyczne Kołobrzeg — Twoje centrum technologiczne
+            Informatyk Kołobrzeg
           </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
-            Oferujemy szeroki zakres usług IT, które zapewniają bezpieczeństwo, wydajność i niezawodność dla Twojej firmy.
+          <p className="mt-6 max-w-3xl text-lg font-medium text-white">
+            Sieci · ERP Comarch Optima · opieka IT dla firm
+          </p>
+          <p className="mt-3">
+            <a href="tel:+48695432415" className="text-lg font-semibold text-odart-accent hover:text-orange-300">
+              695 432 415
+            </a>
+          </p>
+          <div className="mt-8 grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href={`${SITE}/opieka-it-dla-firm-kolobrzeg/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Opieka</span>
+              <span className="mt-1 block text-sm font-semibold text-white">Abonament IT dla firm</span>
+            </Link>
+            <Link
+              href={`${SITE}/strony-internetowe/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Strony</span>
+              <span className="mt-1 block text-sm font-semibold text-white">WWW od 1200 zł</span>
+            </Link>
+            <Link
+              href={`${SITE}/monitoring-i-kamery-kolobrzeg/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Monitoring</span>
+              <span className="mt-1 block text-sm font-semibold text-white">Kamery w Kołobrzegu</span>
+            </Link>
+            <Link
+              href={`${SITE}/it-dla-hoteli/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Hotele</span>
+              <span className="mt-1 block text-sm font-semibold text-white">IT dla hoteli</span>
+            </Link>
+            <Link
+              href={`${SITE}/pogotowie-it/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Awaria</span>
+              <span className="mt-1 block text-sm font-semibold text-white">Pogotowie IT</span>
+            </Link>
+          </div>
+          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-300">
+            Sieć, serwery, Optima, kopie zapasowe i bieżąca opieka — dla firm z Kołobrzegu i okolic. Od 2008.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              href={`${SITE}/kontakt/`}
-              className="inline-flex items-center rounded-lg bg-odart-accent px-6 py-3 font-semibold text-white hover:brightness-110"
+              href={`${SITE}/pogotowie-it/#zgloszenie`}
+              className="inline-flex items-center gap-2 rounded-lg border border-red-500/80 px-6 py-3 font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300"
+              aria-label="Zgłoś awarię IT"
             >
-              Dowiedz się więcej
-              <ChevronRight className="ml-1 h-5 w-5" aria-hidden />
+              <AlertTriangle className="h-5 w-5 shrink-0" aria-hidden />
+              Zgłoś awarię
             </Link>
             <a
-              href="#nasze-uslugi-it"
+              href="tel:+48695432415"
+              className="inline-flex items-center rounded-lg bg-odart-accent px-6 py-3 font-semibold text-white hover:brightness-110"
+            >
+              Zadzwoń
+              <ChevronRight className="ml-1 h-5 w-5" aria-hidden />
+            </a>
+            <Link
+              href={`${SITE}/kontakt/`}
               className="inline-flex items-center rounded-lg border border-white/10 px-6 py-3 font-semibold text-white hover:bg-neutral-800"
             >
-              Poznaj szczegóły
-            </a>
+              Napisz
+            </Link>
           </div>
         </div>
       </section>
@@ -260,6 +314,42 @@ export function OdartInformatykKolobrzegPage() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className="border-b border-white/10 bg-neutral-950/30 px-4 py-14 lg:px-6">
+        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
+          <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+            <h2 className="text-xl font-bold text-white">Hotele i pensjonaty</h2>
+            <p className="mt-3 text-neutral-400 leading-relaxed">
+              Wi-Fi gości oddzielone od recepcji, sezonowe szczyty, POS i monitoring — osobna oferta pod obiekty
+              noclegowe w Kołobrzegu i regionie.
+            </p>
+            <Link
+              href={`${SITE}/it-dla-hoteli/`}
+              className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+            >
+              IT dla hoteli
+              <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+            </Link>
+          </article>
+          <article className="rounded-2xl border border-odart-accent/25 bg-odart-accent/5 p-6">
+            <h2 className="text-xl font-bold text-white">Praca stoi — awaria IT</h2>
+            <p className="mt-3 text-neutral-400 leading-relaxed">
+              Sieć, Wi-Fi albo stanowisko padło? Dzwoń{" "}
+              <a href="tel:+48695432415" className="font-semibold text-odart-accent hover:text-orange-300">
+                695 432 415
+              </a>
+              . Bez portalu ticketów.
+            </p>
+            <Link
+              href={`${SITE}/pogotowie-it/`}
+              className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+            >
+              Pogotowie IT
+              <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+            </Link>
+          </article>
         </div>
       </section>
 

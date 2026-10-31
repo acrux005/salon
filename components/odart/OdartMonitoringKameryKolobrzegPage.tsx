@@ -232,6 +232,42 @@ export function OdartMonitoringKameryKolobrzegPage() {
         </div>
       </section>
 
+      <section className="border-b border-white/10 bg-neutral-950/30 px-4 py-14 lg:px-6">
+        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
+          <article className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+            <h2 className="text-xl font-bold text-white">Monitoring w hotelu i pensjonacie</h2>
+            <p className="mt-3 text-neutral-400 leading-relaxed">
+              Kamery to część bezpieczeństwa obiektu. Sieć Wi-Fi gości, recepcja i POS — osobna oferta IT pod hotele w
+              Kołobrzegu.
+            </p>
+            <Link
+              href={`${SITE}/it-dla-hoteli/`}
+              className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+            >
+              IT dla hoteli
+              <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+            </Link>
+          </article>
+          <article className="rounded-2xl border border-odart-accent/25 bg-odart-accent/5 p-6">
+            <h2 className="text-xl font-bold text-white">Awaria rejestratora / sieci?</h2>
+            <p className="mt-3 text-neutral-400 leading-relaxed">
+              Brak podglądu albo padła sieć obiektu — dzwoń{" "}
+              <a href="tel:+48695432415" className="font-semibold text-odart-accent hover:text-orange-300">
+                695 432 415
+              </a>
+              .
+            </p>
+            <Link
+              href={`${SITE}/pogotowie-it/`}
+              className="mt-4 inline-flex items-center text-sm font-semibold text-odart-accent hover:text-orange-300"
+            >
+              Pogotowie IT
+              <ChevronRight className="ml-1 h-4 w-4" aria-hidden />
+            </Link>
+          </article>
+        </div>
+      </section>
+
       <section className="px-4 py-16 lg:px-6">
         <div className="mx-auto max-w-6xl rounded-2xl border border-odart-accent/30 bg-gradient-to-br from-neutral-900/80 to-black p-8 lg:p-12">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">Skontaktuj się z nami już dziś!</h2>

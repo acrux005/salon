@@ -1,37 +1,41 @@
 import type { Metadata } from "next";
 import { PortalPageClient } from "@/components/portal/PortalPageClient";
-import { getAllClinicRecordsAsync } from "@/lib/skinmatch/clinics";
+import { getFeaturedClinicRecordsAsync } from "@/lib/skinmatch/clinics";
+import { getClaimedClinicIdSet } from "@/lib/catalogListingServer";
 import { PORTAL_SITE_URL } from "@/content/portalSeo";
 
 export const metadata: Metadata = {
-  title: "Dobierz zabieg lub gabinet kosmetyczny w Polsce",
+  title: {
+    absolute: "Znajdź salon beauty w swojej okolicy | Salon Odart",
+  },
   description:
-    "Dobierz idealny zabieg lub gabinet kosmetyczny w Polsce — w kilka minut. Analiza skóry, katalog usług, lista gabinetów, artykuły eksperckie i rezerwacja online.",
+    "Gabinety kosmetyczne, fryzjerstwo, paznokcie, brwi i masaże. Znajdź salon w swoim mieście. Właściciele: bezpłatny profil i oferta stron WWW.",
   keywords: [
-    "Zabiegi Odart",
-    "gabinety kosmetyczne Polska",
-    "zabiegi kosmetyczne Polska",
-    "analiza skóry online",
-    "dobór zabiegów",
-    "rezerwacja kosmetyczna",
+    "Salon Odart",
+    "gabinety kosmetyczne",
+    "salon beauty",
+    "fryzjer",
+    "paznokcie",
+    "strona internetowa gabinetu",
   ],
   alternates: { canonical: `${PORTAL_SITE_URL}/portal` },
   openGraph: {
-    title: "Zabiegi Odart – zabiegi i gabinety kosmetyczne w Polsce",
+    title: "Salon Odart — znajdź salon beauty",
     description:
-      "Portal jakościowy: dopasowanie problemu skóry lub usługi do sprawdzonych gabinetów w wybranym mieście — bez przypadkowego katalogu.",
+      "Portal gabinetów i usług beauty. Szukaj salonu w okolicy. Właściciele: profil w portalu i własne strony WWW.",
     url: `${PORTAL_SITE_URL}/portal`,
-    siteName: "Zabiegi Odart",
+    siteName: "Salon Odart",
     locale: "pl_PL",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zabiegi Odart — Polska",
-    description: "Dobierz zabieg lub gabinet kosmetyczny w Polsce — szybko i bez zgadywania.",
+    title: "Salon Odart — salony beauty",
+    description: "Znajdź salon beauty w swojej okolicy.",
   },
 };
 
 export default async function PortalPage() {
-  const featuredClinics = await getAllClinicRecordsAsync();
-  return <PortalPageClient featuredClinics={featuredClinics} />;
+  const featuredClinics = await getFeaturedClinicRecordsAsync(12);
+  const claimedIds = Array.from(await getClaimedClinicIdSet(featuredClinics.map((c) => c.id)));
+  return <PortalPageClient featuredClinics={featuredClinics} claimedIds={claimedIds} />;
 }

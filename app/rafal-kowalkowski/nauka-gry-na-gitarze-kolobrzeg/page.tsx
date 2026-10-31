@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { absolute: "Nauka gry na gitarze Kołobrzeg — lekcje gitary | Rafał Kowalkowski" },
     description:
-      "Lekcje gitary w Kołobrzegu — gitara akustyczna i elektryczna, dla dzieci i dorosłych, także online. Indywidualna nauka, akordy, rytm, akompaniament i nagrania — Rafał Kowalkowski, ACRUX.",
+      "Lekcje gitary w Kołobrzegu — gitara akustyczna i elektryczna, dla dzieci i dorosłych, także online. Indywidualna nauka, akordy, rytm, akompaniament i nagrania — Rafał Kowalkowski.",
     keywords: [
       "nauka gry na gitarze Kołobrzeg",
       "lekcje gitary Kołobrzeg",

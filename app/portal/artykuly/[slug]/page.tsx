@@ -394,10 +394,10 @@ const ARTICLES: Record<string, Article> = {
   },
 
   "przebarwienia-plan": {
-    title: "Przebarwienia skóry: plan terapii krok po kroku",
-    headline: "Przebarwienia skóry — kompletny plan terapii: diagnoza, zabiegi i pielęgnacja domowa",
+    title: "Przebarwienia: od czego zacząć dobór pielęgnacji i zabiegów?",
+    headline: "Przebarwienia skóry — od czego zacząć dobór pielęgnacji i zabiegów",
     excerpt:
-      "Plamy słoneczne, przebarwienia pozapalne i melasma — każde wymaga innego podejścia. Dowiedz się, jak wygląda skuteczna 6-tygodniowa terapia przebarwień: od diagnozy, przez zabiegi gabinetowe, po codzienną pielęgnację z SPF.",
+      "Plamy słoneczne, przebarwienia pozapalne i melasma wymagają różnego podejścia. Sprawdź, od czego zacząć: diagnoza, bezpieczna pielęgnacja z SPF i kiedy warto omówić zabiegi w gabinecie.",
     keywords: [
       "przebarwienia skóry",
       "jak usunąć przebarwienia",

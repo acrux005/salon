@@ -7,18 +7,53 @@ import { CLINICS_SEED, getAllClinicRecords, getClinicBySlug } from "./clinicsSee
 
 export { CLINICS_SEED, getAllClinicRecords, getClinicBySlug };
 
-/** DB first (isPublished), fallback seed. */
-export async function getAllClinicRecordsAsync(city?: string): Promise<ClinicRecord[]> {
+/** DB first (isPublished), fallback seed. City match is case-insensitive; accepts one city or a list. */
+export async function getAllClinicRecordsAsync(
+  city?: string | string[]
+): Promise<ClinicRecord[]> {
+  const cities = Array.isArray(city)
+    ? city.map((c) => c.trim().toLowerCase()).filter(Boolean)
+    : city?.trim()
+      ? [city.trim().toLowerCase()]
+      : [];
+
   try {
     const { getPrisma } = await import("@/lib/db");
     const prisma = getPrisma();
-    const where = city ? { isPublished: true, city } : { isPublished: true };
-    const rows = await prisma.clinic.findMany({ where, orderBy: { name: "asc" } });
-    if (rows.length > 0) return rows.map((r) => prismaClinicToRecord(r as Parameters<typeof prismaClinicToRecord>[0]));
+    const rows = await prisma.clinic.findMany({
+      where: { isPublished: true },
+      orderBy: { name: "asc" },
+    });
+    if (rows.length > 0) {
+      const mapped = rows.map((r) =>
+        prismaClinicToRecord(r as Parameters<typeof prismaClinicToRecord>[0])
+      );
+      if (cities.length === 0) return mapped;
+      return mapped.filter((c) => cities.includes(c.city.toLowerCase()));
+    }
   } catch {
     // no DB or not configured
   }
-  return getAllClinicRecords(city);
+  if (cities.length === 0) return getAllClinicRecords();
+  if (cities.length === 1) return getAllClinicRecords(cities[0]);
+  const merged = new Map<string, ClinicRecord>();
+  for (const c of cities) {
+    for (const clinic of getAllClinicRecords(c)) merged.set(clinic.id, clinic);
+  }
+  return Array.from(merged.values()).sort((a, b) => a.name.localeCompare(b.name, "pl"));
+}
+
+/** Polecane na homepage — najpierw kompletniejsze profile (zdjęcie, opinie, specjalizacje). */
+export async function getFeaturedClinicRecordsAsync(limit = 6): Promise<ClinicRecord[]> {
+  const all = await getAllClinicRecordsAsync();
+  const score = (c: ClinicRecord) =>
+    (c.avatarUrl ? 4 : 0) +
+    (c.specializations.length > 0 ? 2 : 0) +
+    (c.reviewCount > 0 ? 3 : 0) +
+    (c.rating || 0);
+  return [...all]
+    .sort((a, b) => score(b) - score(a) || b.reviewCount - a.reviewCount || a.name.localeCompare(b.name, "pl"))
+    .slice(0, limit);
 }
 
 /** DB first, fallback seed. */

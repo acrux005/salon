@@ -5,19 +5,23 @@ import { PortalQuizProvider } from "./PortalQuizContext";
 import { HeaderPortal } from "./HeaderPortal";
 import { HeroPortal } from "./HeroPortal";
 import { CategoriesBar } from "./CategoriesBar";
-import { HowItWorks } from "./HowItWorks";
-import { YourTherapy } from "./YourTherapy";
+import { OwnerOfferSection } from "./OwnerOfferSection";
 import { FeaturedClinics } from "./FeaturedClinics";
-import { CaseStudies } from "./CaseStudies";
+import { SkinAnalysisTeaser } from "./SkinAnalysisTeaser";
 import { BlogSection } from "./BlogSection";
-import { ForClinics } from "./ForClinics";
 import { FooterPortal } from "./FooterPortal";
 import { StickyCTA } from "./StickyCTA";
 import { QuizModal } from "./QuizModal";
 import { OpenModalFromQuery } from "./OpenModalFromQuery";
 import type { ClinicRecord } from "@/lib/skinmatch/schema";
 
-function PortalContent({ featuredClinics }: { featuredClinics?: ClinicRecord[] }) {
+function PortalContent({
+  featuredClinics,
+  claimedIds,
+}: {
+  featuredClinics?: ClinicRecord[];
+  claimedIds?: string[];
+}) {
   return (
     <>
       <Suspense fallback={null}>
@@ -27,12 +31,13 @@ function PortalContent({ featuredClinics }: { featuredClinics?: ClinicRecord[] }
       <main>
         <HeroPortal />
         <CategoriesBar />
-        <HowItWorks />
-        <YourTherapy />
-        <FeaturedClinics clinics={featuredClinics && featuredClinics.length > 0 ? featuredClinics : undefined} />
-        <CaseStudies />
+        <OwnerOfferSection />
+        <FeaturedClinics
+          clinics={featuredClinics && featuredClinics.length > 0 ? featuredClinics : undefined}
+          claimedIds={claimedIds}
+        />
+        <SkinAnalysisTeaser />
         <BlogSection />
-        <ForClinics />
         <FooterPortal />
       </main>
       <StickyCTA />
@@ -42,10 +47,16 @@ function PortalContent({ featuredClinics }: { featuredClinics?: ClinicRecord[] }
   );
 }
 
-export function PortalPageClient({ featuredClinics }: { featuredClinics?: ClinicRecord[] }) {
+export function PortalPageClient({
+  featuredClinics,
+  claimedIds,
+}: {
+  featuredClinics?: ClinicRecord[];
+  claimedIds?: string[];
+}) {
   return (
     <PortalQuizProvider>
-      <PortalContent featuredClinics={featuredClinics} />
+      <PortalContent featuredClinics={featuredClinics} claimedIds={claimedIds} />
     </PortalQuizProvider>
   );
 }

@@ -17,9 +17,11 @@ import {
   Settings,
   TrendingUp,
   Monitor,
+  Globe,
   Mail,
   Phone,
   MapPin,
+  Building2,
 } from "lucide-react";
 import { ODART_SITE_URL } from "@/lib/odartSite";
 import { OdartPublicShell } from "@/components/odart/OdartPublicShell";
@@ -34,6 +36,14 @@ const services: {
   body: string;
   href: string;
 }[] = [
+  {
+    icon: Globe,
+    title: "zaamow.pl — domeny, poczta, strony, aplikacje",
+    lead: "Sklep ODART do zamówienia online",
+    body:
+      "Rejestracja domen .pl, poczta firmowa, strony WWW z katalogu oraz aplikacje: Harmonogram, Mini ERP, Hub, gabinety, zamówienia jedzenia. Pełna mapa oferty na odart.pl/zaamow — zakupy na zaamow.pl.",
+    href: "/zaamow/",
+  },
   {
     icon: Code2,
     title: "Nowoczesne aplikacje webowe",
@@ -68,18 +78,18 @@ const services: {
   },
   {
     icon: Sparkles,
-    title: "Strona od 1500 zł",
-    lead: "One page w pakiecie — przejrzysta cena",
+    title: "Strona one page",
+    lead: "Jedna strona, konkretny zakres",
     body:
-      "Profesjonalna strona w formie one page — responsywna, z projektem, realizacją i wdrożeniem. Jedna kwota za opisany zakres, bez ukrytych kosztów. Idealna na start firmy lub kampanię.",
+      "Krótka strona firmowa: oferta, kontakt, działa na telefonie. Projekt, wdrożenie i publikacja. Na start albo na jedną kampanię.",
     href: "/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl",
   },
   {
     icon: PenLine,
     title: "Tworzenie stron WordPress",
-    lead: "Kompleksowe usługi tworzenia stron na WordPressie",
+    lead: "Strona, którą sam edytujesz",
     body:
-      "Strony internetowe oparte na WordPressie — dopasowane do potrzeb Twojej firmy. Od projektowania po wdrożenie: treści, motywy, integracje i szkolenie z obsługi panelu.",
+      "WordPress: treści, motyw, integracje i szkolenie z panelu. Żebyś nie dzwonił do mnie przy każdej zmianie godziny otwarcia.",
     href: "/tworzenie-stron-internetowych-na-wordpressie",
   },
   {
@@ -155,6 +165,30 @@ const services: {
     href: "/informatyk-kolobrzeg",
   },
   {
+    icon: Settings,
+    title: "Opieka IT dla firm Kołobrzeg",
+    lead: "Zewnętrzny dział IT — abonament",
+    body:
+      "Helpdesk, sieć, backup i monitoring systemów. Pakiety Basic, Standard, Professional. Rafał Kowalkowski — jedna osoba odpowiedzialna za IT.",
+    href: "/opieka-it-dla-firm-kolobrzeg/",
+  },
+  {
+    icon: Building2,
+    title: "IT dla hoteli i pensjonatów",
+    lead: "Wi-Fi gości, sieć recepcji, sezon, POS",
+    body:
+      "IT pod obiekty noclegowe w Kołobrzegu: oddzielone Wi-Fi gości, sezonowe szczyty, monitoring i terminale. Bez farmy stron pod każde miasto.",
+    href: "/it-dla-hoteli/",
+  },
+  {
+    icon: Phone,
+    title: "Pogotowie IT — awaria",
+    lead: "Praca stoi? Dzwoń 695 432 415",
+    body:
+      "Awaria sieci, Wi-Fi, stanowiska albo kasy. Krótka ścieżka awaryjna bez fałszywego systemu ticketów — Rafał Kowalkowski, Kołobrzeg.",
+    href: "/pogotowie-it/",
+  },
+  {
     icon: Monitor,
     title: "Informatyk Koszalin",
     lead: "Usługi IT dla firm i klientów indywidualnych",
@@ -171,9 +205,9 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${CANONICAL}#webpage`,
       url: CANONICAL,
-      name: "Usługi | ODART — strony internetowe, WordPress, SEO",
+      name: "Usługi | ODART — strony internetowe, WordPress, SEO, zaamow.pl",
       description:
-        "Strony WWW, WordPress, migracje, wycena, SEO, pozycjonowanie, social media, monitoring, usługi IT. Kołobrzeg, Koszalin.",
+        "Strony WWW, domeny i poczta (zaamow.pl), WordPress, migracje, SEO, monitoring, usługi IT. Kołobrzeg, Koszalin.",
       isPartOf: { "@id": `${SITE}/#website` },
       inLanguage: "pl-PL",
     },
@@ -189,6 +223,7 @@ const jsonLd = {
         addressLocality: "Kołobrzeg",
         addressCountry: "PL",
       },
+      sameAs: ["https://zaamow.pl"],
     },
   ],
 };
@@ -211,10 +246,14 @@ export function OdartUslugiPage() {
         </div>
         <div className="relative mx-auto max-w-6xl px-4 py-16 lg:py-20 lg:px-6">
           <p className="text-sm font-medium uppercase tracking-wide text-odart-accent">ODART · Kołobrzeg</p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Usługi internetowe</h1>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Usługi</h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
-            Kompleksowe wsparcie: strony WWW, WordPress (tworzenie, administracja), migracje, przywracanie po infekcji,
-            wycena, SEO, pozycjonowanie, social media, monitoring wizyjny i usługi IT — Kołobrzeg, Koszalin i online.
+            Strony, WordPress, migracje, sprzątanie po wirusie, SEO, kamery i opieka IT. Domenę, pocztę i aplikacje
+            zamawiasz też na{" "}
+            <Link href={`${SITE}/zaamow/`} className="text-odart-accent hover:text-orange-300">
+              zaamow.pl
+            </Link>
+            . Kołobrzeg, Koszalin, zdalnie.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
@@ -225,10 +264,10 @@ export function OdartUslugiPage() {
               <ChevronRight className="ml-1 h-5 w-5" aria-hidden />
             </Link>
             <Link
-              href={`${SITE}/profesjonalna-strona-internetowa-dla-ciebie-juz-od-1500-zl`}
+              href={`${SITE}/zaamow/`}
               className="inline-flex items-center rounded-lg border border-white/10 px-6 py-3 font-semibold text-white hover:bg-neutral-800"
             >
-              Strona od 1500 zł
+              zaamow.pl
             </Link>
           </div>
         </div>

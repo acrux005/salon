@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPrisma } from "@/lib/db";
 import { mapGabAppointmentRow } from "@/lib/gabinet/appointmentDisplay";
+import { requireGabClinicSession } from "@/lib/requireClinicApiSession";
 
 export async function GET(request: NextRequest) {
+  const gate = await requireGabClinicSession();
+  if (!gate.ok) return gate.response;
+
   const month = request.nextUrl.searchParams.get("month")?.trim() || new Date().toISOString().slice(0, 7);
   const singleDate = request.nextUrl.searchParams.get("date")?.trim();
   const staffId = request.nextUrl.searchParams.get("staff_id")?.trim();
@@ -29,13 +33,15 @@ export async function GET(request: NextRequest) {
     dateTo = `${year}-${String(monthNum).padStart(2, "0")}-${String(lastDay.getDate()).padStart(2, "0")}`;
   }
 
-  let gabClinicId: string | null = null;
-  if (gabSlug) {
+  let gabClinicId: string | null = gate.session.admin ? null : gate.session.gabClinicId;
+  if (gate.session.admin && gabSlug) {
     const clinic = await getPrisma().gabClinic.findFirst({
       where: { slug: gabSlug },
       select: { id: true },
     });
     if (clinic) gabClinicId = clinic.id;
+  } else if (!gate.session.admin) {
+    gabClinicId = gate.session.gabClinicId;
   }
 
   const appointments: Record<string, ReturnType<typeof mapGabAppointmentRow>[]> = {};

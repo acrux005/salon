@@ -11,7 +11,7 @@ const jsonLd = {
     {
       "@type": "Article",
       "@id": `${CANONICAL}#article`,
-      headline: "Ogólne zasady pozycjonowania (SEO) stron internetowych",
+      headline: "Pozycjonowanie stron Kołobrzeg — SEO lokalne",
       datePublished: "2024-05-26",
       dateModified: "2024-05-26",
       author: { "@type": "Organization", name: "ODART", url: SITE },
@@ -27,7 +27,7 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${CANONICAL}#webpage`,
       url: CANONICAL,
-      name: "Zasady pozycjonowania SEO | ODART",
+      name: "Pozycjonowanie stron Kołobrzeg | ODART",
       isPartOf: { "@id": `${SITE}/#website` },
     },
   ],
@@ -46,12 +46,15 @@ export function OdartPozycjonowanieSeoPage() {
             <span className="text-neutral-400">Strony internetowe</span>
           </p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Ogólne zasady pozycjonowania (SEO) stron internetowych
+            Pozycjonowanie stron Kołobrzeg
           </h1>
+          <p className="mt-3 text-lg text-neutral-300">
+            SEO lokalne dla firm z Kołobrzegu i okolic — treść, technika, Search Console. Rafał Kowalkowski, ODART.
+          </p>
           <p className="mt-4 text-sm text-neutral-500">
             <time dateTime="2024-05-26">26 maja 2024</time>
             {" · "}
-            Kategoria: strony internetowe
+            Kategoria: pozycjonowanie SEO
           </p>
 
           <div className="prose prose-invert prose-headings:scroll-mt-24 prose-p:text-neutral-400 prose-li:text-neutral-400 prose-strong:text-neutral-200 mt-10 max-w-none">

@@ -79,7 +79,7 @@ export default function GabinetRegisterPage() {
   }
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-12">
+    <main className="mx-auto min-w-0 max-w-lg px-4 py-12">
       <GabLink href="/" className="text-[14px] font-medium text-sky-700 hover:underline">
         ← {brand.brandName}
       </GabLink>

@@ -25,16 +25,16 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": `${CANONICAL}#webpage`,
       url: CANONICAL,
-      name: "Usługi informatyczne Koszalin | ODART",
+      name: "Informatyk Koszalin — sieci, ERP, opieka IT | ODART",
       description:
-        "Serwery, sieci LAN/WAN, ERP Comarch Optima i Enova, backup w chmurze, audyt IT. Obsługa firm w Koszalinie.",
+        "IT dla firm z Koszalina: sieci, Comarch Optima, backup i opieka. Rafał Kowalkowski, od 2008. Tel. 695 432 415.",
       isPartOf: { "@id": `${SITE}/#website` },
       inLanguage: "pl-PL",
     },
     {
       "@type": "ProfessionalService",
       "@id": `${CANONICAL}#service`,
-      name: "Usługi informatyczne Koszalin — ODART",
+      name: "Informatyk Koszalin — ODART",
       url: CANONICAL,
       telephone: "+48695432415",
       email: "biuro@odart.pl",
@@ -62,28 +62,60 @@ export function OdartInformatykKoszalinPage() {
       <section className="border-b border-white/10 bg-gradient-to-b from-neutral-950/40 to-black px-4 py-16 lg:px-6 lg:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="text-sm font-medium uppercase tracking-wide text-odart-accent">
-            Kompleksowe wsparcie IT dla firm i klientów indywidualnych
+            ODART — Rafał Kowalkowski
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Usługi informatyczne Koszalin — profesjonalna obsługa firm i biur
+            Informatyk Koszalin
           </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
-            Oferujemy szeroki zakres usług IT, które zapewniają bezpieczeństwo, wydajność i niezawodność dla Twojej firmy.
+          <p className="mt-6 max-w-3xl text-lg font-medium text-white">
+            Sieci · ERP Comarch Optima · opieka IT dla firm
+          </p>
+          <p className="mt-3">
+            <a href="tel:+48695432415" className="text-lg font-semibold text-odart-accent hover:text-orange-300">
+              695 432 415
+            </a>
+          </p>
+          <div className="mt-8 grid max-w-3xl gap-3 sm:grid-cols-3">
+            <Link
+              href={`${SITE}/opieka-it-dla-firm-kolobrzeg/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Opieka</span>
+              <span className="mt-1 block text-sm font-semibold text-white">Abonament IT dla firm</span>
+            </Link>
+            <Link
+              href={`${SITE}/strony-internetowe/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Strony</span>
+              <span className="mt-1 block text-sm font-semibold text-white">WWW od 1200 zł</span>
+            </Link>
+            <Link
+              href={`${SITE}/informatyk-kolobrzeg/`}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-odart-accent/40"
+            >
+              <span className="text-xs font-medium uppercase tracking-wide text-odart-accent/90">Kołobrzeg</span>
+              <span className="mt-1 block text-sm font-semibold text-white">Też obsługuję okolice</span>
+            </Link>
+          </div>
+          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-300">
+            Sieć, serwery, Optima, kopie zapasowe i bieżąca opieka — dla firm z Koszalina i okolic. Od 2008, dojazdy z
+            Kołobrzegu.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              href={`${SITE}/kontakt/`}
+            <a
+              href="tel:+48695432415"
               className="inline-flex items-center rounded-lg bg-odart-accent px-6 py-3 font-semibold text-white hover:brightness-110"
             >
-              Dowiedz się więcej
+              Zadzwoń
               <ChevronRight className="ml-1 h-5 w-5" aria-hidden />
-            </Link>
-            <a
-              href="#nasze-uslugi-it"
+            </a>
+            <Link
+              href={`${SITE}/kontakt/`}
               className="inline-flex items-center rounded-lg border border-white/10 px-6 py-3 font-semibold text-white hover:bg-neutral-800"
             >
-              Poznaj szczegóły
-            </a>
+              Napisz
+            </Link>
           </div>
         </div>
       </section>

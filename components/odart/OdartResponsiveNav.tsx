@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { AlertTriangle, ChevronDown, Menu, X } from "lucide-react";
 import { ODART_SITE_URL, ODART_MARKETING_ORIGIN } from "@/lib/odartSite";
 import {
   getOdartNav,
@@ -16,6 +16,7 @@ import {
 } from "@/components/odart/odartNav";
 import { OdartServicesDropdown } from "@/components/odart/OdartServicesDropdown";
 const SITE = ODART_SITE_URL;
+const AWARIA_HREF = `${SITE}/pogotowie-it/#zgloszenie`;
 
 type Props = {
   activeNav?: OdartNavKey;
@@ -34,6 +35,8 @@ const LABELS = {
     services: "Usługi",
     consultation: "Konsultacja",
     consultationHref: `${SITE}/kontakt/`,
+    reportOutage: "Zgłoś awarię",
+    reportOutageAria: "Zgłoś awarię IT — pogotowie",
     languageLabel: "Wersja językowa",
   },
   en: {
@@ -45,6 +48,8 @@ const LABELS = {
     services: "Services",
     consultation: "Consultation",
     consultationHref: `${SITE}/en/#contact`,
+    reportOutage: "Report outage",
+    reportOutageAria: "Report IT outage — emergency support",
     languageLabel: "Language version",
   },
 } as const;
@@ -124,6 +129,16 @@ export function OdartResponsiveNav({
             </Link>
           );
         })}
+        {locale === "pl" ? (
+          <Link
+            href={AWARIA_HREF}
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-red-500/80 px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300"
+            aria-label={labels.reportOutageAria}
+          >
+            <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
+            {labels.reportOutage}
+          </Link>
+        ) : null}
         <Link
           href={labels.consultationHref}
           className="whitespace-nowrap rounded-full bg-odart-accent px-5 py-2 text-sm text-white hover:brightness-110"
@@ -224,10 +239,23 @@ export function OdartResponsiveNav({
                       </Link>
                     );
                   })}
+                  {locale === "pl" ? (
+                    <Link
+                      href={AWARIA_HREF}
+                      onClick={close}
+                      className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-red-500/80 px-5 py-3 text-center text-base font-semibold text-red-400 hover:bg-red-500/10"
+                      aria-label={labels.reportOutageAria}
+                    >
+                      <AlertTriangle className="h-5 w-5 shrink-0" aria-hidden />
+                      {labels.reportOutage}
+                    </Link>
+                  ) : null}
                   <Link
                     href={labels.consultationHref}
                     onClick={close}
-                    className="mt-4 rounded-full bg-odart-accent px-5 py-3 text-center text-base font-semibold text-white hover:brightness-110"
+                    className={`rounded-full bg-odart-accent px-5 py-3 text-center text-base font-semibold text-white hover:brightness-110 ${
+                      locale === "pl" ? "mt-2" : "mt-4"
+                    }`}
                   >
                     {labels.consultation}
                   </Link>

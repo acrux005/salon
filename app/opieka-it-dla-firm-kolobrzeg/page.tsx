@@ -13,7 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
     return { title: "404" };
   }
   return {
-    title: "Opieka IT dla firm Kołobrzeg — zewnętrzny dział IT | ODART",
+    title: {
+      absolute: "Opieka IT dla firm Kołobrzeg — zewnętrzny dział IT | ODART",
+    },
     description:
       "Zewnętrzny dział IT dla firm w Kołobrzegu: opieka nad systemami, siecią i bezpieczeństwem. Pakiety Basic, Standard, Professional — helpdesk i backup.",
     keywords: [

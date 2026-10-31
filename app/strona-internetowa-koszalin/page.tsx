@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "Strona internetowa Koszalin | ODART",
       description:
-        "Strony WWW, które zdobywają klientów — od wizytówki po sklep. Dopasowanie do branży, SEO, szybki kontakt.",
+        "Strony WWW dla firm z Koszalina — wizytówka, strona usługowa albo sklep. SEO, kontakt, WordPress albo Next.js.",
       url: CANONICAL,
       locale: "pl_PL",
       type: "website",

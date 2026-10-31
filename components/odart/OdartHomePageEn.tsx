@@ -21,9 +21,9 @@ import { getEnglishServiceHref } from "@/lib/odartEnglishServices";
 import { OdartPublicShell } from "@/components/odart/OdartPublicShell";
 import { OdartSnakeLineAccent } from "@/components/odart/OdartSnakeLineAccent";
 import { OdartSpiralLine } from "@/components/odart/OdartSpiralLine";
+import { OdartZaamowSection } from "@/components/odart/OdartZaamowSection";
 
 const SITE = ODART_SITE_URL;
-const EN_SITE = `${SITE}/en`;
 
 const portfolioCopy: Record<string, { title: string; description: string; tech?: string[] }> = {
   "https://salon.odart.pl/": {
@@ -69,7 +69,7 @@ const jsonLd = {
       url: `${SITE}/en/`,
       name: "ODART",
       description:
-        "Custom web applications, business websites, WordPress, SEO and IT support from Kolobrzeg, Poland.",
+        "Websites, web apps and IT support from Kolobrzeg, Poland. Since 2008.",
       publisher: { "@id": `${SITE}/#org` },
       inLanguage: "en",
     },
@@ -90,6 +90,7 @@ const jsonLd = {
         name: "Rafal Kowalkowski",
         jobTitle: "Web developer & designer",
       },
+      sameAs: ["https://zaamow.pl"],
     },
   ],
 };
@@ -123,36 +124,34 @@ export function OdartHomePageEn() {
         </div>
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-20 lg:px-6 lg:py-28">
           <p className="text-sm font-medium uppercase tracking-wide text-odart-accent">
-            Ostry Dyzur Artystyczny
+            Kolobrzeg · since 2008
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Advanced web applications and business websites
+            Websites and applications
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-300">
-            I build modern web products - from architecture and interface design to API integrations,
-            automation and production deployment. For marketing and content-driven websites, I also use{" "}
-            <strong className="font-semibold text-white">WordPress</strong> as a reliable CMS when it fits the
-            project.
+            My name is Rafal Kowalkowski. I have been building websites and apps since 2008: Fotoferia, food
+            ordering, business panels. WordPress when you need to edit the content yourself.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
-              href={`${EN_SITE}/#about`}
+              href={`${SITE}/kontakt/`}
               className="inline-flex items-center rounded-lg bg-odart-accent px-6 py-3 font-semibold text-white hover:brightness-110"
             >
-              Learn more
+              Ask for a quote
               <ChevronRight className="ml-1 h-5 w-5" aria-hidden />
             </Link>
             <Link
-              href={`${EN_SITE}/#services`}
+              href={`${SITE}/strony-internetowe/`}
               className="inline-flex items-center rounded-lg border border-white/10 px-6 py-3 font-semibold text-white hover:bg-neutral-800"
             >
-              Services
+              Websites
             </Link>
             <Link
-              href={`${EN_SITE}/#contact`}
+              href={`${SITE}/en/#services`}
               className="inline-flex items-center rounded-lg border border-odart-accent/35 bg-odart-accent/10 px-6 py-3 font-semibold text-white hover:bg-odart-accent/20"
             >
-              Contact
+              Services
             </Link>
           </div>
         </div>
@@ -161,34 +160,34 @@ export function OdartHomePageEn() {
       <section className="border-b border-white/10 bg-neutral-950 px-4 py-16 lg:px-6">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-odart-accent">
-            ODART - Poland and remote
+            Websites and IT
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-center text-2xl font-bold text-white sm:text-3xl">
-            Websites, web applications and IT support for small and medium businesses
+            Websites and IT support
           </p>
           <div className="mt-12 grid gap-8 lg:grid-cols-2">
             {[
               {
                 label: "Business websites",
-                title: "Websites that bring in leads",
+                title: "Company website",
                 text:
-                  "A website should explain the offer, collect enquiries and be visible in Google. I plan the structure, content, UX, SEO basics and implementation.",
+                  "Brochure site, clinic or shop. Form, phone and email on the first screen. WordPress or Next.js, depending on whether you will edit the texts yourselves.",
                 href: `${SITE}/strony-internetowe/`,
-                cta: "Website offer",
-                points: ["WordPress or Next.js", "Responsive layout and clear UX", "Contact form and analytics"],
+                cta: "Websites",
+                points: ["Works on a phone", "Basic SEO (titles, headings, sitemap)", "Scope after a conversation"],
               },
               {
                 label: "IT support",
-                title: "IT care for companies",
+                title: "Computers and network",
                 text:
-                  "Ongoing support for workstations, networks, backup, security and everyday technical issues, with a clear scope and communication channel.",
+                  "Updates, backups, outages. Kolobrzeg, Koszalin or remote desktop. One number, agreed scope.",
                 href: `${SITE}/opieka-it-dla-firm-kolobrzeg/`,
-                cta: "IT support offer",
-                points: ["Helpdesk and infrastructure", "Backups and security", "Kolobrzeg, Koszalin and remote"],
+                cta: "IT support",
+                points: ["Email or phone", "Backups and updates", "On site or remote"],
               },
             ].map((item) => (
               <article
-                key={item.label}
+                key={item.title}
                 className="flex flex-col rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-8 lg:p-10"
               >
                 <p className="text-xs font-medium uppercase tracking-wider text-odart-accent">{item.label}</p>
@@ -215,15 +214,17 @@ export function OdartHomePageEn() {
         </div>
       </section>
 
+      <OdartZaamowSection locale="en" />
+
       <section id="services" className="border-b border-white/10 bg-neutral-950 px-4 py-16 lg:px-6">
         <div className="mx-auto max-w-6xl">
           <h2 className="sr-only">Scope of work</h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: Palette, title: "UI/UX design", desc: "Clear interfaces and user flows designed in Figma and Adobe." },
-              { icon: Code2, title: "Web applications", desc: "React, Next.js, APIs and integrations built around your process." },
-              { icon: Sparkles, title: "Creative work", desc: "Visual identity, graphics and consistent digital communication." },
-              { icon: FileText, title: "Content", desc: "Website copy planned for clarity, SEO and conversion." },
+              { icon: Palette, title: "Interface", desc: "Page and app layout. Figma, sometimes Adobe." },
+              { icon: Code2, title: "Applications", desc: "Next.js, React. WordPress when you need a content panel." },
+              { icon: Sparkles, title: "Graphics", desc: "Logos, banners, social graphics." },
+              { icon: FileText, title: "Copy", desc: "I can write from scratch or edit what you already have." },
             ].map((item) => (
               <div key={item.title} className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
                 <item.icon className="h-8 w-8 text-odart-accent" aria-hidden />
@@ -248,12 +249,10 @@ export function OdartHomePageEn() {
             />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Experience you can build on</h2>
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">From Kolobrzeg, since 2008</h2>
             <p className="mt-6 leading-relaxed text-neutral-400">
-              Since 2008, I have been designing and developing digital products - from fotoferia.pl to
-              custom applications, internal panels and websites for different industries. I combine UX/UI,
-              modern frontend development and practical CMS choices with a focus on performance,
-              maintainability and business value.
+              I started with fotoferia.pl. Then came panels, shops, food ordering, scheduling tools. I code
+              in Next.js. I leave WordPress where someone logs in every day and changes the offer.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {[
@@ -391,78 +390,12 @@ export function OdartHomePageEn() {
         </div>
       </section>
 
-      <section className="px-4 py-20 lg:px-6">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-center text-sm font-medium uppercase tracking-wide text-odart-accent">Pricing</p>
-          <h2 className="mt-2 text-center text-3xl font-bold text-white sm:text-4xl">Choose a starting point</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-neutral-400">
-            Indicative packages - the final estimate is prepared after a short call about the scope.
-          </p>
-          <div className="mt-14 grid gap-8 lg:grid-cols-3">
-            {[
-              {
-                name: "Simple website",
-                price: "PLN 1000",
-                sub: "website",
-                feats: ["Admin panel", "Theme", "Installation and configuration", "Graphics", "Content"],
-              },
-              {
-                name: "Extended website",
-                price: "PLN 1800",
-                sub: "website",
-                highlight: true,
-                feats: ["Admin panel", "Theme", "Setup", "Materials and content", "Additional pages", "Analytics"],
-              },
-              {
-                name: "Online store",
-                price: "PLN 2500",
-                sub: "store",
-                feats: ["Admin panel", "Theme", "Setup", "Materials and content", "Additional pages", "Analytics"],
-              },
-            ].map((plan) => (
-              <div
-                key={plan.name}
-                className={`flex flex-col rounded-2xl border p-8 ${
-                  plan.highlight
-                    ? "border-odart-accent/50 bg-neutral-950/50 ring-1 ring-odart-accent/30"
-                    : "border-white/10 bg-white/[0.02]"
-                }`}
-              >
-                <p className="text-sm text-odart-accent">{plan.name}</p>
-                <p className="mt-4 text-3xl font-bold text-white">
-                  {plan.price}
-                  <span className="text-base font-normal text-neutral-500"> / {plan.sub}</span>
-                </p>
-                <ul className="mt-8 flex-1 space-y-3">
-                  {plan.feats.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-neutral-300">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-odart-accent" aria-hidden />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={`${EN_SITE}/#contact`}
-                  className={`mt-8 block rounded-lg py-3 text-center text-sm font-semibold ${
-                    plan.highlight
-                      ? "bg-odart-accent text-white hover:brightness-110"
-                      : "border border-white/10 text-white hover:bg-neutral-800"
-                  }`}
-                >
-                  Choose plan
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="contact" className="border-t border-white/10 bg-gradient-to-br from-neutral-950/50 to-black px-4 py-20 lg:px-6">
         <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-2 lg:gap-16">
           <div>
-            <h2 className="text-3xl font-bold text-white">Contact and project estimate</h2>
+            <h2 className="text-3xl font-bold text-white">Contact</h2>
             <p className="mt-4 text-neutral-400">
-              Send a few words about your project - I will reply with next steps or suggest a time for a call.
+              Email biuro@odart.pl or call. I usually reply the same day.
             </p>
             <ul className="mt-8 space-y-4 text-neutral-300">
               <li className="flex items-center gap-3">
@@ -484,15 +417,13 @@ export function OdartHomePageEn() {
             </ul>
           </div>
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-8 lg:mt-0">
-            <p className="text-sm font-medium text-white">Quick contact</p>
-            <p className="mt-2 text-sm text-neutral-500">
-              Write directly by email or use the contact form on the Polish contact page.
-            </p>
+            <p className="text-sm font-medium text-white">Contact form</p>
+            <p className="mt-2 text-sm text-neutral-500">You can also just send an email.</p>
             <Link
               href={`${SITE}/kontakt/`}
               className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-odart-accent py-3 font-semibold text-white hover:brightness-110"
             >
-              Go to contact form
+              Ask for a quote
             </Link>
           </div>
         </div>

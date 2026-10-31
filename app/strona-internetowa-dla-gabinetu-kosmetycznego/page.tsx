@@ -6,22 +6,27 @@ const PATH = "/strona-internetowa-dla-gabinetu-kosmetycznego";
 const canonical = `${SALON_SITE_URL}${PATH}`;
 
 export const metadata: Metadata = {
-  title: "Strona internetowa dla gabinetu kosmetycznego — projekt, SEO, od 1500 zł",
+  title: {
+    absolute:
+      "Strona internetowa dla gabinetu kosmetycznego i urody od 1500 zł | ODART",
+  },
   description:
-    "Strona internetowa dla gabinetu kosmetycznego i salonu beauty: mobile, SEO lokalne („gabinet kosmetyczny + miasto”), cennik zabiegów, rezerwacje. Wycena od ok. 1500 zł — Zabiegi Odart / ODART.",
+    "Strona WWW dla gabinetu kosmetycznego / salonu urody: mobile, SEO lokalne, cennik zabiegów, rezerwacje. Od ok. 1500 zł — Rafał Kowalkowski, ODART. Tel. 695 432 415.",
   keywords: [
-    "strona internetowa dla gabinetu",
     "strona internetowa dla gabinetu kosmetycznego",
+    "strona internetowa dla gabinetu urody",
+    "strona internetowa gabinetu kosmetycznego",
     "strona dla gabinetu kosmetycznego",
+    "strona dla gabinetu urody",
     "strona www gabinet kosmetyczny",
     "strona salonu kosmetycznego",
     "tworzenie strony dla gabinetu",
   ],
   alternates: { canonical },
   openGraph: {
-    title: "Strona internetowa dla gabinetu kosmetycznego | Zabiegi Odart",
+    title: "Strona internetowa dla gabinetu kosmetycznego i urody | ODART",
     description:
-      "Profesjonalna strona WWW pod gabinet kosmetyczny — SEO, mobile i integracja z portalem Zabiegi Odart.",
+      "Strona WWW pod gabinet kosmetyczny i salon urody — SEO, mobile, rezerwacje. Wycena od 1500 zł.",
     url: canonical,
     locale: "pl_PL",
     type: "website",
@@ -33,7 +38,7 @@ export default function StronaDlaGabinetuKosmetycznegoPage() {
   return (
     <BeautySalonWebsiteLanding
       audiencePhrase="dla gabinetu kosmetycznego"
-      h1Suffix="dla gabinetu kosmetycznego i salonu beauty"
+      h1Suffix="dla gabinetu kosmetycznego i salonu urody"
     />
   );
 }

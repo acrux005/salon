@@ -4,11 +4,15 @@ import { GAB_APPOINTMENT_PREFIX } from "@/lib/gabinet/appointmentDisplay";
 import { normalizeVisitType } from "@/lib/gabinet/visitTypes";
 import { isValidVisitStatus } from "@/lib/gabinet/visitStatus";
 import { scheduleRecallAfterCompletedVisit } from "@/lib/gabinet/recallReminders";
+import { requireGabClinicSession } from "@/lib/requireClinicApiSession";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireGabClinicSession();
+  if (!gate.ok) return gate.response;
+
   const { id } = await params;
   if (!id?.startsWith(GAB_APPOINTMENT_PREFIX)) {
     return NextResponse.json({ error: "Nieznany typ wizyty." }, { status: 404 });
@@ -36,6 +40,9 @@ export async function PATCH(
     const existing = await prisma.gabAppointment.findUnique({ where: { id: bookingId } });
     if (!existing) {
       return NextResponse.json({ error: "Nie znaleziono wizyty." }, { status: 404 });
+    }
+    if (!gate.session.admin && existing.gabClinicId !== gate.session.gabClinicId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const data: {
@@ -118,6 +125,9 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireGabClinicSession();
+  if (!gate.ok) return gate.response;
+
   const { id } = await params;
   if (!id?.startsWith(GAB_APPOINTMENT_PREFIX)) {
     return NextResponse.json({ error: "Nie znaleziono." }, { status: 404 });
@@ -126,6 +136,9 @@ export async function DELETE(
   try {
     const existing = await getPrisma().gabAppointment.findUnique({ where: { id: bookingId } });
     if (!existing) return NextResponse.json({ error: "Nie znaleziono wizyty." }, { status: 404 });
+    if (!gate.session.admin && existing.gabClinicId !== gate.session.gabClinicId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     await getPrisma().gabAppointment.update({
       where: { id: bookingId },
       data: { status: "cancelled" },
@@ -140,6 +153,9 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireGabClinicSession();
+  if (!gate.ok) return gate.response;
+
   const { id } = await params;
   if (!id?.startsWith(GAB_APPOINTMENT_PREFIX)) {
     return NextResponse.json({ error: "Nie znaleziono." }, { status: 404 });
@@ -151,6 +167,9 @@ export async function GET(
       include: { gabStaff: { select: { id: true, name: true } } },
     });
     if (!row) return NextResponse.json({ error: "Nie znaleziono." }, { status: 404 });
+    if (!gate.session.admin && row.gabClinicId !== gate.session.gabClinicId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     return NextResponse.json({
       appointment: {
         id: GAB_APPOINTMENT_PREFIX + row.id,

@@ -16,16 +16,16 @@ export async function generateMetadata(): Promise<Metadata> {
   }
   const canonical = await canonicalForRafalSection(RAFAL_KOWALKOWSKI_GALLERY_PATH);
   return {
-    title: { absolute: "Galeria — Rafał Kowalkowski | ODART" },
-    description: "Galeria zdjęć Rafała Kowalkowskiego (ACRUX) — portrety, sesje, plener.",
+    title: { absolute: "Galeria fotografii — Rafał Kowalkowski | Kołobrzeg" },
+    description: "Galeria zdjęć: portrety, sesje plenerowe i studio — Rafał Kowalkowski, fotograf Kołobrzeg.",
     alternates: { canonical },
     openGraph: {
-      title: "Galeria — Rafał Kowalkowski | ODART",
-      description: "Wybrane realizacje fotograficzne.",
+      title: "Galeria fotografii — Rafał Kowalkowski | Kołobrzeg",
+      description: "Portrety, plener i studio — fotograf Kołobrzeg.",
       url: canonical,
       locale: "pl_PL",
       type: "website",
-      siteName: "ODART",
+      siteName: "Rafał Kowalkowski",
       images: [{ url: OG_IMAGE, width: 1200, height: 800, alt: "Galeria Rafała Kowalkowskiego" }],
     },
   };
